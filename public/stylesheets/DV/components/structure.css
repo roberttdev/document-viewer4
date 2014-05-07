@@ -47,10 +47,17 @@
 .DV-well{
   position:absolute;
   top: 0; right: 0;
-  width: 265px; height: 100%;
+  width: 500px; height: 100%;
   border-left:1px solid #aaa;
   overflow-y: auto; overflow-x: hidden;
   background: white;
+}
+
+.DV-navControlsContainer {
+    background-color: #fff;
+    background-repeat: repeat-x;
+    background-image: url(../../../images/DV/embed/shadow-white.gif);
+    height: 32px;
 }
 
 .DV-sidebarSpacer {
@@ -58,15 +65,15 @@
 }
 
 .DV-well .DV-navControls{
-  background-color: #fff;
-  background-repeat: repeat-x;
-  background-image: url(../../../images/DV/embed/shadow-white.gif);
+  width: 225px;
+  display: inline-block;
+  margin-left: 130px;
 }
 
 .DV-pages{
   overflow: auto;
   position: absolute;
-  left: 0; right: 266px; top: 0; bottom: 0;
+  left: 0; right: 500px; top: 0; bottom: 0;
   z-index:10001;
 }
 

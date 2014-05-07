@@ -52,39 +52,12 @@
             </div>
           <% } %>
               
-          <div class="DV-navigation">
-            <%= descriptionContainer %>
-            <div class="DV-contentsHeader"><%= DV.t('contents') %></div>
-            <div class="DV-chaptersContainer">
-            </div>
-            <div class="DV-supplemental">
-              <% if (pdf_url) { %>
-                <div class="DV-pdfLink"><%= pdf_url %></div>
-              <% } %>
-              <% if (print_notes_url) { %>
-                <div class="DV-printNotesLink">
-                  <a target="_blank" href="<%= print_notes_url %>"><%= DV.t('print_notes') %> &raquo;</a>
-                </div>
-              <% } %>
-              <div class="DV-storyLink" style="<%= story_url ? '' : 'display:none' %>">
-                <a target="_blank" href="<%= story_url %>"><%= DV.t('related_article') %> &raquo;</a>
-              </div>
-              <% if (contributors) { %>
-                <div class="DV-contributor"><%= DV.t('contributed_by') %>: <%= contributors %></div>
-              <% } %>
-            </div>
-            <div class="DV-logo"><a class="DV-logoLink" href="http://www.documentcloud.org"></a></div>
-          </div>
         </div>
       </div>
     </div>
     
     <%= footer %>
     
-  </div>
-  
-  <div class="DV-printMessage">
-    <%= DV.t('print_document_help') %>
   </div>
 
 </div>
