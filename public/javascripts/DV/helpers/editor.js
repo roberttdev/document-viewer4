@@ -22,6 +22,13 @@ DV._.extend(DV.Schema.helpers,{
     var anno   = this.getAnnotationModel(annoEl);
     if (!anno) return;
     anno.title     = this.viewer.$('.DV-annotationTitleInput', annoEl).val();
+
+    if($.trim(anno.title).length==0){
+        this.viewer.$('.DV-annotationTitleInput', annoEl).addClass('error');
+        this.viewer.$('.DV-errorMsg', annoEl).html(DV.t('no_title_error'));
+        return;
+    }
+
     anno.text      = this.viewer.$('.DV-annotationTextArea', annoEl).val();
     anno.owns_note = anno.unsaved ? true : anno.owns_note;
     if (anno.owns_note) {

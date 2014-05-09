@@ -33,12 +33,12 @@
       <div class="DV-annotationGoto DV-editHidden"><div class="DV-trigger"><%= DV.t('pg') %><%= pageNumber %></div></div>
       <div class="DV-annotationTitle DV-editHidden"><%= title %></div>
       <input class="DV-annotationTitleInput DV-editVisible" type="text" placeholder="<%= DV.t('annotation_title') %>" value="<%= title.replace(/"/g, '&quot;') %>" />
+      <div class="DV-errorMsg"></div>
       <% if (access == 'exclusive') { %>
         <div class="DV-annotationDraftLabel DV-editHidden DV-interface"><%= DV.t('draft') %></div>
       <% } else if (access == 'private') { %>
         <div class="DV-privateLock DV-editHidden" title="<%= DV.t('private_note',2) %>"></div>
       <% } %>
-      <span class="DV-permalink DV-editHidden" title="<%= DV.t('link_to_note') %>"></span>
       <div class="DV-showEdit DV-editHidden <%= accessClass %>"></div>
     </div>
 
@@ -84,9 +84,6 @@
               <%= DV.t('save') %>
             <% } %>
           </div>
-          <% if (access == 'public' || access == 'exclusive') { %>
-            <div class="minibutton DV-saveAnnotationDraft float_right"><%= DV.t('save_as_draft') %></div>
-          <% } %>
           <div class="minibutton DV-cancelEdit float_right"><%= DV.t('cancel') %></div>
         </div>
       </div>

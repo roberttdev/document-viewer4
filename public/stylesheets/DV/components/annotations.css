@@ -556,7 +556,7 @@
 }
 
 .DV-editing .DV-editVisible {
-  display: block;
+  display: inline;
 }
 
 .DV-editing .DV-editHidden {

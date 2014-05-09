@@ -60,6 +60,21 @@
   left: 0; top: 0;
 }
 
+.DV-errorMsg {
+    display: inline;
+    margin-left: 10px;
+    font-size: 14px;
+    color: red;
+}
+
+.DV-errorBox {
+    border-color: red;
+}
+
+.DV-annotationHeader {
+    height: 30px;
+}
+
 .DV-annotationTitleInput,
 .DV-annotationTextArea {
   border: 1px solid #D0D0D0;
