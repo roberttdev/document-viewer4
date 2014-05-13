@@ -6,6 +6,7 @@ DV.model.Annotations = function(viewer) {
   this.offsetAdjustmentSum      = 0;
   this.saveCallbacks            = [];
   this.deleteCallbacks          = [];
+  this.selectCallbacks          = [];
   this.byId                     = this.viewer.schema.data.annotationsById;
   this.byPage                   = this.viewer.schema.data.annotationsByPage;
   this.bySortOrder              = this.sortAnnotations();
@@ -75,6 +76,28 @@ DV.model.Annotations.prototype = {
     return this.bySortOrder = DV._.sortBy(DV._.values(this.byId), function(anno) {
       return anno.page * 10000 + anno.y1;
     });
+  },
+
+  //Populate any missing annotation server IDs with data from client
+  //locationIds: hash containing ID and location
+  syncIDs: function(locationIds) {
+    unsynced = _.filter(this.byId, function(listAnno){ return listAnno.server_id == null; });
+    unsynced.map(function(anno){
+       toSync = _.find(locationIds, function(pair){ return pair.location.image = anno.location.image; });
+       anno.server_id = toSync.id;
+    });
+  },
+
+  //Match annotation data passed in with an existing annotation
+  findAnnotation: function(anno) {
+      //Try ID first
+      if(anno.id){
+        annos = _.find(this.byId, function(listAnno){ return listAnno.server_id == anno.id; });
+      }else {
+        //If no ID, match on highlight image
+        annos = _.find(this.byId, function (listAnno) { return listAnno.location.image == anno  .location.image; });
+      }
+      return annos;
   },
 
   // Renders each annotation into it's HTML format.
@@ -177,6 +200,13 @@ DV.model.Annotations.prototype = {
   fireDeleteCallbacks : function(anno) {
     DV._.each(this.deleteCallbacks, function(c){ c(anno); });
   },
+
+
+  // When new active annotation selected from DV UI, fire select callbacks
+  fireSelectCallbacks : function(anno) {
+      DV._.each(this.selectCallbacks, function(c){ c(anno); });
+  },
+
 
   // Returns the list of annotations on a given page.
   getAnnotations: function(_index){

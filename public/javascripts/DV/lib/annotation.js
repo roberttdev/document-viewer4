@@ -92,6 +92,11 @@ DV.Annotation.prototype.show = function(argHash) {
   if (argHash && argHash.edit) {
     this.showEdit();
   }
+
+  //If annotation is a saved one, trigger events on display
+  if(!this.viewer.activeAnnotation.model.unsaved) {
+    this.viewer.models.annotations.fireSelectCallbacks(this.viewer.activeAnnotation.model);
+  }
 };
 
 // Hide annotation
@@ -113,6 +118,9 @@ DV.Annotation.prototype.hide = function(forceOverlayHide){
     this.hide.preventRemovalOfCoverClass = false;
   }
 
+  //If unsaved, just remove completely
+  if(this.viewer.activeAnnotation.model.unsaved){ this.viewer.models.annotations.removeAnnotation(this.viewer.activeAnnotation); }
+
   // stop tracking this annotation
   this.viewer.activeAnnotation                = null;
   this.viewer.events.trackAnnotation.h        = null;
@@ -125,9 +133,6 @@ DV.Annotation.prototype.hide = function(forceOverlayHide){
   this.pageEl.parent('.DV-set').removeClass('DV-activePage');
   this.removeConnector(true);
 
-  if (isEditing) {
-    this.viewer.helpers.saveAnnotation({target : this.annotationEl}, 'onlyIfText');
-  }
 };
 
 // Toggle annotation

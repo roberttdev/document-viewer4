@@ -206,6 +206,24 @@ DV.Api.prototype = {
     return anno;
   },
 
+  // Find annotation and make it the active one
+  selectAnnotation: function(anno) {
+      anno = this.viewer.models.annotations.findAnnotation(anno);
+      this.viewer.pageSet.showAnnotation(anno, {active: true, edit : true});
+  },
+
+  // Find annotation and make it the active one
+  deleteAnnotation: function(anno) {
+      anno = this.viewer.models.annotations.findAnnotation(anno);
+      this.viewer.models.annotations.removeAnnotation(anno);
+  },
+
+  //Populate any missing annotation IDs with data from client
+  //locationIds: hash containing ID and location
+  syncAnnotationIDs: function(locationIds) {
+      this.viewer.models.annotations.syncIDs(locationIds);
+  },
+
   // Register a callback for when an annotation is saved.
   onAnnotationSave : function(callback) {
     this.viewer.models.annotations.saveCallbacks.push(callback);
@@ -215,6 +233,13 @@ DV.Api.prototype = {
   onAnnotationDelete : function(callback) {
     this.viewer.models.annotations.deleteCallbacks.push(callback);
   },
+
+
+  // Register a callback for when an annotation is deleted.
+  onAnnotationSelect : function(callback) {
+      this.viewer.models.annotations.selectCallbacks.push(callback);
+  },
+
 
   setConfirmStateChange : function(callback) {
     this.viewer.confirmStateChange = callback;
@@ -330,6 +355,10 @@ DV.Api.prototype = {
   leaveEditPageTextMode : function() {
     this.viewer.openEditor = null;
     this.resetPageText();
+  },
+
+  cleanUp: function() {
+      this.viewer.pageSet.cleanUp();
   }
 
 };

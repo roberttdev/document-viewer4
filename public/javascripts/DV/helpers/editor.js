@@ -29,12 +29,12 @@ DV._.extend(DV.Schema.helpers,{
         return;
     }
 
-    anno.text      = this.viewer.$('.DV-annotationTextArea', annoEl).val();
-    anno.owns_note = anno.unsaved ? true : anno.owns_note;
-    if (anno.owns_note) {
-      anno.author              = anno.author || dc.account.name;
-      anno.author_organization = anno.author_organization || (dc.account.isReal && dc.account.organization.name);
-    }
+    anno.text                = this.viewer.$('.DV-annotationTextArea', annoEl).val();
+    anno.unsaved             = false;
+    anno.owns_note           = anno.owns_note;
+    anno.author              = anno.author || dc.account.name;
+    anno.author_organization = anno.author_organization || (dc.account.isReal && dc.account.organization.name);
+
     if (target.hasClass('DV-saveAnnotationDraft'))  anno.access = 'exclusive';
     else if (annoEl.hasClass('DV-accessExclusive')) anno.access = 'public';
     if (option == 'onlyIfText' &&
