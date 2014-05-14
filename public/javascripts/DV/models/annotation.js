@@ -83,7 +83,7 @@ DV.model.Annotations.prototype = {
   syncIDs: function(locationIds) {
     unsynced = _.filter(this.byId, function(listAnno){ return listAnno.server_id == null; });
     unsynced.map(function(anno){
-       toSync = _.find(locationIds, function(pair){ return pair.location.image = anno.location.image; });
+       toSync = _.find(locationIds, function(pair){ return pair.location.image == anno.location.image; });
        anno.server_id = toSync.id;
     });
   },
@@ -91,12 +91,9 @@ DV.model.Annotations.prototype = {
   //Match annotation data passed in with an existing annotation
   findAnnotation: function(anno) {
       //Try ID first
-      if(anno.id){
-        annos = _.find(this.byId, function(listAnno){ return listAnno.server_id == anno.id; });
-      }else {
-        //If no ID, match on highlight image
-        annos = _.find(this.byId, function (listAnno) { return listAnno.location.image == anno  .location.image; });
-      }
+      if(anno.id) { annos = _.find(this.byId, function (listAnno) { return listAnno.server_id == anno.id; }); }
+      //If no ID match, match on highlight image
+      if(!annos){ annos = _.find(this.byId, function (listAnno) { return listAnno.location.image == anno.location.image; }); }
       return annos;
   },
 
