@@ -57,3 +57,10 @@ DV.Schema.prototype.loadAnnotation = function(anno) {
   page.splice(insertionIndex, 0, anno);
   return anno;
 };
+
+//Reload annotation schema
+DV.Schema.prototype.reloadAnnotations = function(annos) {
+    this.data.annotationsById = {};
+    this.data.annotationsByPage = {};
+    DV._.each(annos, DV.jQuery.proxy(this.loadAnnotation, this));
+}

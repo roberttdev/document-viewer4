@@ -88,6 +88,14 @@ DV.model.Annotations.prototype = {
     });
   },
 
+  //Remove current annotations from DOM and reload from schema
+  reloadAnnotations: function(){
+      DV._.each(this.byId, DV.jQuery.proxy(this.removeAnnotationFromDOM, this));
+      this.byId                     = this.viewer.schema.data.annotationsById;
+      this.byPage                   = this.viewer.schema.data.annotationsByPage;
+      this.bySortOrder              = this.sortAnnotations();
+  },
+
   //Match annotation data passed in with an existing annotation
   findAnnotation: function(anno) {
       //Try ID first
@@ -143,9 +151,13 @@ DV.model.Annotations.prototype = {
     var i = anno.page - 1;
     this.byPage[i] = DV._.without(this.byPage[i], anno);
     this.sortAnnotations();
-    DV.jQuery('#DV-annotation-' + anno.id + ', #DV-listAnnotation-' + anno.id).remove();
+    this.removeAnnotationFromDOM(anno);
     this.viewer.api.redraw(true);
     if (DV._.isEmpty(this.byId)) this.viewer.open('ViewDocument');
+  },
+
+  removeAnnotationFromDOM: function(anno) {
+      DV.jQuery('#DV-annotation-' + anno.id + ', #DV-listAnnotation-' + anno.id).remove();
   },
 
   // Offsets all document pages based on interleaved page annotations.

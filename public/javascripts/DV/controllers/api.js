@@ -224,6 +224,13 @@ DV.Api.prototype = {
       this.viewer.models.annotations.syncIDs(locationIds);
   },
 
+  //Reload current annotations store with passed in annotations
+  reloadAnnotations: function(annos){
+      this.viewer.schema.reloadAnnotations(annos);
+      this.viewer.models.annotations.reloadAnnotations();
+      this.redraw(true);
+  },
+
   // Register a callback for when an annotation is saved.
   onAnnotationSave : function(callback) {
     this.viewer.models.annotations.saveCallbacks.push(callback);
