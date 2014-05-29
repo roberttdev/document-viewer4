@@ -170,7 +170,7 @@ DV.Annotation.prototype.removeConnector = function(force){
 // Show edit controls
 DV.Annotation.prototype.showEdit = function() {
   this.annotationEl.addClass('DV-editing');
-  this.viewer.$('.DV-annotationTitleInput', this.annotationEl).focus();
+  this.viewer.$('.DV-annotationTitleInput', this.annotationEl).val() ? this.viewer.$('.DV-annotationTextArea', this.annotationEl).focus() : this.viewer.$('.DV-annotationTitleInput', this.annotationEl).focus() ;
 };
 
 // Remove the annotation from the page
