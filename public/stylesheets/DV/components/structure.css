@@ -47,7 +47,7 @@
 .DV-well{
   position:absolute;
   top: 0; right: 0;
-  width: 500px; height: 100%;
+  width: 400px; height: 100%;
   border-left:1px solid #aaa;
   overflow-y: auto; overflow-x: hidden;
   background: white;
@@ -67,13 +67,13 @@
 .DV-well .DV-navControls{
   width: 225px;
   display: inline-block;
-  margin-left: 130px;
+  margin-left: 100px;
 }
 
 .DV-pages{
   overflow: auto;
   position: absolute;
-  left: 0; right: 500px; top: 0; bottom: 0;
+  left: 0; right: 400px; top: 0; bottom: 0;
   z-index:10001;
 }
 

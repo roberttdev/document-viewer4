@@ -98,6 +98,7 @@ DV.model.Annotations.prototype = {
 
   //Match annotation data passed in with an existing annotation
   findAnnotation: function(anno) {
+      annos = null;
       //Try ID first
       if(anno.id) { annos = _.find(this.byId, function (listAnno) { return listAnno.server_id == anno.id; }); }
       //If no ID match, match on highlight image
