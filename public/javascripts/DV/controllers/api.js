@@ -212,16 +212,22 @@ DV.Api.prototype = {
       this.viewer.pageSet.showAnnotation(anno, {active: true, edit : true});
   },
 
-  // Find annotation and make it the active one
-  deleteAnnotation: function(anno) {
+  // Remove annotation/group relationship (and annotation if no relationships left)
+  deleteAnnotation: function(anno, group) {
       anno = this.viewer.models.annotations.findAnnotation(anno);
-      this.viewer.models.annotations.removeAnnotation(anno);
+      this.viewer.models.annotations.removeAnnotation(anno, group);
   },
 
   //Populate any missing annotation IDs with data from client
   //locationIds: hash containing ID and location
   syncAnnotationIDs: function(locationIds) {
       this.viewer.models.annotations.syncIDs(locationIds);
+  },
+
+  //Pass group association to DV, to update DV defs if necessary
+  syncGroupAnnotation: function(annoId, groupId){
+      this.viewer.models.annotations.syncGroupAnnotation(annoId, groupId);
+      this.redraw(true);
   },
 
   //Reload current annotations store with passed in annotations
@@ -317,6 +323,11 @@ DV.Api.prototype = {
     delete DV.viewers[this.viewer.schema.document.id];
   },
 
+  //Hide active annotation(s), mainly
+  cleanUp: function() {
+      this.viewer.pageSet.cleanUp();
+  },
+
   // ---------------------- Enter/Leave Edit Modes -----------------------------
 
   enterRemovePagesMode : function() {
@@ -362,10 +373,6 @@ DV.Api.prototype = {
   leaveEditPageTextMode : function() {
     this.viewer.openEditor = null;
     this.resetPageText();
-  },
-
-  cleanUp: function() {
-      this.viewer.pageSet.cleanUp();
   }
 
 };

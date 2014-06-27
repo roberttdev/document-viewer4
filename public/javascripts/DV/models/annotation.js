@@ -16,7 +16,7 @@ DV.model.Annotations.prototype = {
 
   // Render an annotation model to HTML, calculating all of the dimenstions
   // and offsets, and running a template function.
-  render: function(annotation){
+  render: function(annotation, groupId){
     var documentModel             = this.viewer.models.document;
     var pageModel                 = this.viewer.models.pages;
     var zoom                      = pageModel.zoomFactor();
@@ -56,6 +56,10 @@ DV.model.Annotations.prototype = {
     adata.regionHeight            = y2 - y1;
     adata.excerptDSHeight         = adata.excerptHeight - 6;
     adata.DSOffset                = 3;
+    adata.groupCount              = annotation.groups.length;
+    adata.groupIndex              = annotation.groups.indexOf(groupId);
+
+    adata.groupIndex = adata.groupIndex <= 0 ? 1 : adata.groupIndex + 1;
 
     if (adata.access == 'public')         adata.accessClass = 'DV-accessPublic';
     else if (adata.access =='exclusive')  adata.accessClass = 'DV-accessExclusive';
@@ -81,11 +85,18 @@ DV.model.Annotations.prototype = {
   //Populate any missing annotation server IDs with data from client
   //locationIds: hash containing ID and location
   syncIDs: function(locationIds) {
+    //Sync missing IDs
     unsynced = _.filter(this.byId, function(listAnno){ return listAnno.server_id == null; });
     unsynced.map(function(anno){
-       toSync = _.find(locationIds, function(pair){ return pair.location.image == anno.location.image; });
+       toSync = _.find(locationIds, function(pair){ return pair.location ? pair.location.image == anno.location.image : false; });
        anno.server_id = toSync.id;
     });
+  },
+
+  //Populate a group relations with data from client, if missing
+  syncGroupAnnotation: function(annoId, groupId) {
+      dvAnno = this.byId[annoId];
+      if( dvAnno.groups.indexOf(groupId) < 0 ){ dvAnno.groups.push(groupId); }
   },
 
   //Remove current annotations from DOM and reload from schema
@@ -143,18 +154,22 @@ DV.model.Annotations.prototype = {
   refreshAnnotation : function(anno) {
     var viewer = this.viewer;
     anno.html = this.render(anno);
-    DV.jQuery.$('#DV-annotation-' + anno.id).replaceWith(anno.html);
+    this.viewer.$('#DV-annotation-' + anno.id).replaceWith(anno.html);
   },
 
-  // Removes a given annotation from the Annotations model (and DOM).
-  removeAnnotation : function(anno) {
-    delete this.byId[anno.id];
-    var i = anno.page - 1;
-    this.byPage[i] = DV._.without(this.byPage[i], anno);
-    this.sortAnnotations();
-    this.removeAnnotationFromDOM(anno);
-    this.viewer.api.redraw(true);
-    if (DV._.isEmpty(this.byId)) this.viewer.open('ViewDocument');
+  // Removes a given annotation/group relationship from the Annotations model (and DOM).  If last relationship left is being
+  // deleted, deletes entire annotation
+  removeAnnotation : function(anno, groupId) {
+    if( anno.groups.length > 1 ){ anno.groups.splice(anno.groups.indexOf(groupId), 1); }
+    else {
+        delete this.byId[anno.id];
+        var i = anno.page - 1;
+        this.byPage[i] = DV._.without(this.byPage[i], anno);
+        this.sortAnnotations();
+        this.removeAnnotationFromDOM(anno);
+        this.viewer.api.redraw(true);
+        if (DV._.isEmpty(this.byId)) this.viewer.open('ViewDocument');
+    }
   },
 
   removeAnnotationFromDOM: function(anno) {
@@ -229,12 +244,31 @@ DV.model.Annotations.prototype = {
 
   getNextAnnotation: function(currentId) {
     var anno = this.byId[currentId];
-    return this.bySortOrder[DV._.indexOf(this.bySortOrder, anno) + 1];
+    if( anno.groupIndex < anno.groupCount ){
+        //If there are more group associations in anno, advance association counter and return this anno
+        anno.groupIndex++;
+        return anno;
+    }else{
+        //Else, set this index back to 1 and return next anno.  If this is the last, return the first
+        anno.groupIndex = 1;
+        if( DV._.indexOf(this.bySortOrder, anno) + 1 < this.bySortOrder.length ){ return this.bySortOrder[DV._.indexOf(this.bySortOrder, anno) + 1]; }
+        else{ return this.bySortOrder[0]; }
+    }
   },
 
   getPreviousAnnotation: function(currentId) {
     var anno = this.byId[currentId];
-    return this.bySortOrder[DV._.indexOf(this.bySortOrder, anno) - 1];
+    if( anno.groupIndex != 1 ){
+        //If there are more group associations in anno, reduce association counter and return this anno
+        anno.groupIndex--;
+        return anno;
+    }else{
+        //Else, return previous anno's last group association.  If this is the first, move to the last
+        if( DV._.indexOf(this.bySortOrder, anno) != 0 ){ returnAnno = this.bySortOrder[DV._.indexOf(this.bySortOrder, anno) - 1]; }
+        else{ returnAnno = this.bySortOrder[this.bySortOrder.length - 1]; }
+        returnAnno.groupIndex = returnAnno.groupCount;
+        return returnAnno;
+    }
   },
 
   // Get an annotation by id, with backwards compatibility for argument hashes.

@@ -405,14 +405,6 @@
   padding-right:4px;
 }
 
-.DV-lastAnnotation .DV-annotationPrevious{
-  padding-right:0;
-}
-.DV-lastAnnotation .DV-annotationNext{
-  display:none;
-}
-
-
 .DV-annotationPrevious:hover{
   text-decoration:underline;
 }
@@ -431,10 +423,7 @@
   text-decoration:underline;
 }
 
-.DV-firstAnnotation .DV-annotationPrevious,
-.DV-lastAnnotation .DV-annotationNext{
-  display:none;
-}
+
 /* ---------------------------------------------------- pageNote */
 
 .DV-pageNote{

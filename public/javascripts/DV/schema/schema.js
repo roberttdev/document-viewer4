@@ -38,23 +38,36 @@ DV.Schema.prototype.importCanonicalDocument = function(json) {
 
 // Load an annotation into the Schema, starting from the canonical format.
 DV.Schema.prototype.loadAnnotation = function(anno) {
-  if (anno.id) anno.server_id = anno.id;
-  var idx     = anno.page - 1;
-  anno.id     = anno.id || parseInt( DV._.uniqueId() );
-  anno.title  = anno.title || '';
-  anno.text   = anno.content || '';
-  anno.access = anno.access || 'public';
-  anno.type   = anno.location && anno.location.image ? 'region' : 'page';
-  if (anno.type === 'region') {
-    var loc = DV.jQuery.map(anno.location.image.split(','), function(n, i) { return parseInt(n, 10); });
-    anno.y1 = loc[0]; anno.x2 = loc[1]; anno.y2 = loc[2]; anno.x1 = loc[3];
-  }else if(anno.type === 'page'){
-    anno.y1 = 0; anno.x2 = 0; anno.y2 = 0; anno.x1 = 0;
+  //Only load annos with highlights already set
+  if(anno.location) {
+      if (anno.id) anno.server_id = anno.id;
+      var idx = anno.page - 1;
+      anno.id = anno.id || parseInt(DV._.uniqueId());
+      anno.title = anno.title || '';
+      anno.text = anno.content || '';
+      anno.access = anno.access || 'public';
+      anno.type = anno.location && anno.location.image ? 'region' : 'page';
+      if (anno.type === 'region') {
+          var loc = DV.jQuery.map(anno.location.image.split(','), function (n, i) {
+              return parseInt(n, 10);
+          });
+          anno.y1 = loc[0];
+          anno.x2 = loc[1];
+          anno.y2 = loc[2];
+          anno.x1 = loc[3];
+      } else if (anno.type === 'page') {
+          anno.y1 = 0;
+          anno.x2 = 0;
+          anno.y2 = 0;
+          anno.x1 = 0;
+      }
+      this.data.annotationsById[anno.id] = anno;
+      var page = this.data.annotationsByPage[idx] = this.data.annotationsByPage[idx] || [];
+      var insertionIndex = DV._.sortedIndex(page, anno, function (a) {
+          return a.y1;
+      });
+      page.splice(insertionIndex, 0, anno);
   }
-  this.data.annotationsById[anno.id] = anno;
-  var page = this.data.annotationsByPage[idx] = this.data.annotationsByPage[idx] || [];
-  var insertionIndex = DV._.sortedIndex(page, anno, function(a){ return a.y1; });
-  page.splice(insertionIndex, 0, anno);
   return anno;
 };
 

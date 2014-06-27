@@ -56,7 +56,7 @@ DV.Annotation.prototype.next = function(){
     return;
   }
 
-  this.page.set.showAnnotation({ index: annotation.index, id: annotation.id, top: annotation.top });
+  this.page.set.showAnnotation(annotation);
 };
 
 // Jump to previous annotation
@@ -81,6 +81,9 @@ DV.Annotation.prototype.show = function(argHash) {
   this.annotationEl.find('div.DV-annotationBG').css({ display: 'block', opacity: 1 });
   this.annotationEl.addClass('DV-activeAnnotation');
   this.viewer.activeAnnotation   = this;
+
+  //Refresh page markers to latest data
+  this.annotationEl.find('.DV-groupCount').html('('+parseInt(this.model.groupIndex)+' of '+parseInt(this.model.groupCount)+')');
 
   // Enable annotation tracking to ensure the active state hides on scroll
   this.viewer.helpers.addObserver('trackAnnotation');
