@@ -160,11 +160,12 @@ DV.model.Annotations.prototype = {
   // Removes a given annotation/group relationship from the Annotations model (and DOM).  If last relationship left is being
   // deleted, deletes entire annotation
   removeAnnotation : function(anno, groupId) {
-    if( anno.groups.length > 1 ){ anno.groups.splice(anno.groups.indexOf(groupId), 1); }
+    if( anno.groups && anno.groups.length > 1 ){ anno.groups.splice(anno.groups.indexOf(groupId), 1); }
     else {
+        goneAnno = this.byId[anno.id]
         delete this.byId[anno.id];
-        var i = anno.page - 1;
-        this.byPage[i] = DV._.without(this.byPage[i], anno);
+        var i = anno.page.index;
+        this.byPage[i] = DV._.without(this.byPage[i], goneAnno);
         this.sortAnnotations();
         this.removeAnnotationFromDOM(anno);
         this.viewer.api.redraw(true);
