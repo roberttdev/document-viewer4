@@ -60,7 +60,8 @@ DV._.extend(DV.Schema.helpers, {
     var container = this.viewer.options.container;
     var containerEl = DV.jQuery(container);
     if (!containerEl.length) throw "Document Viewer container element not found: " + container; // TRANSLATE?
-    containerEl.html(JST.viewer(viewerOptions));
+    if( this.viewer.options.layout == 'vertical' ){ containerEl.html(JST.viewerVertical(viewerOptions)); }
+    else{ containerEl.html(JST.viewerHorizontal(viewerOptions)); }
   },
 
   // If there is no description, no navigation, and no sections, tighten up
