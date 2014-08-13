@@ -207,9 +207,9 @@ DV.Api.prototype = {
   },
 
   // Find annotation and make it the active one
-  selectAnnotation: function(anno) {
+  selectAnnotation: function(anno, showEdit) {
       anno = this.viewer.models.annotations.findAnnotation(anno);
-      this.viewer.pageSet.showAnnotation(anno, {active: true, edit : true});
+      this.viewer.pageSet.showAnnotation(anno, {active: true, edit : showEdit});
   },
 
   // Remove annotation/group relationship (and annotation if no relationships left)
