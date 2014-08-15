@@ -247,12 +247,15 @@ DV.Api.prototype = {
     this.viewer.models.annotations.deleteCallbacks.push(callback);
   },
 
-
   // Register a callback for when an annotation is deleted.
   onAnnotationSelect : function(callback) {
       this.viewer.models.annotations.selectCallbacks.push(callback);
   },
 
+  // Register a callback for when annotating is cancelled.
+  onAnnotationCancel : function(callback) {
+      this.viewer.models.annotations.cancelCallbacks.push(callback);
+  },
 
   setConfirmStateChange : function(callback) {
     this.viewer.confirmStateChange = callback;

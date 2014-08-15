@@ -7,6 +7,7 @@ DV.model.Annotations = function(viewer) {
   this.saveCallbacks            = [];
   this.deleteCallbacks          = [];
   this.selectCallbacks          = [];
+  this.cancelCallbacks          = [];
   this.byId                     = this.viewer.schema.data.annotationsById;
   this.byPage                   = this.viewer.schema.data.annotationsByPage;
   this.bySortOrder              = this.sortAnnotations();
@@ -231,6 +232,13 @@ DV.model.Annotations.prototype = {
   // When new active annotation selected from DV UI, fire select callbacks
   fireSelectCallbacks : function(anno) {
       DV._.each(this.selectCallbacks, function(c){ c(anno); });
+  },
+
+
+  // When an annotation is successfully removed, fire any registered
+  // delete callbacks.
+  fireCancelCallbacks : function(anno) {
+      DV._.each(this.cancelCallbacks, function(c){ c(anno); });
   },
 
 

@@ -15,6 +15,7 @@ DV._.extend(DV.Schema.helpers,{
     } else {
       annoEl.removeClass('DV-editing');
     }
+    this.models.annotations.fireCancelCallbacks(anno);
   },
   saveAnnotation : function(e, option) {
     var target = this.viewer.$(e.target);
