@@ -141,7 +141,7 @@ DV.Page.prototype.draw = function(argHash) {
       }
     }
 
-    this.pageInsertEl.toggleClass('visible', !this.hasLayerPage);
+    //this.pageInsertEl.toggleClass('visible', !this.hasLayerPage);
     this.renderMeta({ pageNumber: this.index+1 });
 
     // Draw remove overlay if page is removed.
