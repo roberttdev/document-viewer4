@@ -331,6 +331,12 @@ DV.Api.prototype = {
       this.viewer.pageSet.cleanUp();
   },
 
+
+  //Activate/deactivate 'approved' view for anno (temporary, data does not update)
+  markApproval: function(anno_id, approval) {
+      this.viewer.models.annotations.markApproval(anno_id, approval);
+  },
+
   // ---------------------- Enter/Leave Edit Modes -----------------------------
 
   enterRemovePagesMode : function() {

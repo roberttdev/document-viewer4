@@ -71,6 +71,9 @@ DV.model.Annotations.prototype = {
     if (adata.position == 1) adata.orderClass += ' DV-firstAnnotation';
     if (adata.position == this.bySortOrder.length) adata.orderClass += ' DV-lastAnnotation';
 
+    adata.approvedClass = '';
+    if(annotation.approved){ adata.approvedClass = ' DV-approved'; }
+
     var template = (adata.type === 'page') ? 'pageAnnotation' : 'annotation';
     return JST[template](adata);
   },
@@ -150,13 +153,6 @@ DV.model.Annotations.prototype = {
     DV._.defer(DV._.bind(this.updateAnnotationOffsets, this));
   },
 
-  // Refresh the annotation's title and content from the model, in both
-  // The document and list views.
-  refreshAnnotation : function(anno) {
-    var viewer = this.viewer;
-    anno.html = this.render(anno);
-    this.viewer.$('#DV-annotation-' + anno.id).replaceWith(anno.html);
-  },
 
   // Removes a given annotation/group relationship from the Annotations model (and DOM).  If last relationship left is being
   // deleted, deletes entire annotation
@@ -176,6 +172,12 @@ DV.model.Annotations.prototype = {
 
   removeAnnotationFromDOM: function(anno) {
       DV.jQuery('#DV-annotation-' + anno.id + ', #DV-listAnnotation-' + anno.id).remove();
+  },
+
+  //Add/remove CSS styling for approval (temporary solution; does not modify underlying data.. will it survive redraw?)
+  markApproval: function(anno_id, approval) {
+      var annoDOM = DV.jQuery('#DV-annotation-' + anno_id + ' .DV-annotationRegion')
+      if(approval){ annoDOM.addClass('DV-approved'); }else{ annoDOM.removeClass('DV-approved'); }
   },
 
   // Offsets all document pages based on interleaved page annotations.

@@ -33,6 +33,13 @@
 
     cursor:pointer;
   }
+  .DV-annotationRegion.DV-approved {
+      background: rgb(46, 227, 37);
+      background: rgba(46, 227, 37, 0.2);
+
+      border:3px solid rgb(46, 200, 0);
+      border:3px solid rgba(46, 227, 37, 0.5);
+  }
   .DV-coverVisible .DV-annotationRegion {
     background: rgb(255, 227, 37);
     background: rgba(255, 227, 37, 0.1);
