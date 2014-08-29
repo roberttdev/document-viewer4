@@ -99,7 +99,7 @@ DV.model.Annotations.prototype = {
 
   //Populate a group relations with data from client, if missing
   syncGroupAnnotation: function(annoId, groupId) {
-      dvAnno = this.byId[annoId];
+      dvAnno = this.findAnnotation({id: annoId});
       if( dvAnno.groups.indexOf(groupId) < 0 ){ dvAnno.groups.push(groupId); }
   },
 
@@ -116,8 +116,8 @@ DV.model.Annotations.prototype = {
       annos = null;
       //Try ID first
       if(anno.id) { annos = _.find(this.byId, function (listAnno) { return listAnno.server_id == anno.id; }); }
-      //If no ID match, match on highlight image
-      if(!annos){ annos = _.find(this.byId, function (listAnno) { return listAnno.location.image == anno.location.image; }); }
+      //If no ID match, and image data exists, match on highlight image
+      if(!annos && anno.location){ annos = _.find(this.byId, function (listAnno) { return listAnno.location.image == anno.location.image; }); }
       return annos;
   },
 
@@ -161,7 +161,7 @@ DV.model.Annotations.prototype = {
     else {
         goneAnno = this.byId[anno.id]
         delete this.byId[anno.id];
-        var i = anno.page.index;
+        var i = anno.page - 1;
         this.byPage[i] = DV._.without(this.byPage[i], goneAnno);
         this.sortAnnotations();
         this.removeAnnotationFromDOM(anno);
