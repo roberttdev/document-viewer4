@@ -72,10 +72,28 @@ DV.model.Annotations.prototype = {
     if (adata.position == this.bySortOrder.length) adata.orderClass += ' DV-lastAnnotation';
 
     adata.approvedClass = '';
-    if(annotation.approved){ adata.approvedClass = ' DV-approved'; }
+    var approvalState = this.getApprovalState(annotation);
+    if(approvalState == 1){ adata.approvedClass = ' DV-semi-approved'; }
+    if(approvalState == 2){ adata.approvedClass = ' DV-approved'; }
 
     var template = (adata.type === 'page') ? 'pageAnnotation' : 'annotation';
     return JST[template](adata);
+  },
+
+  //Find approval state of overall annotation based on annotation-group relationship statuses.
+  //Returns: 0 = unapproved, 1 = semi-approved, 2 = approved
+  getApprovalState: function(annotation){
+    var approved = 0;
+    for(var i=0; i < annotation.groups.length; i++){
+        if( annotation.groups[i].approved_count > 0){ approved++; }
+    }
+
+    if( approved > 0 ){
+        if( approved == annotation.groups.length ){ approved = 2; }
+        else{ approved = 1; }
+    }
+
+    return approved;
   },
 
   // Re-sort the list of annotations when its contents change. Annotations
@@ -174,10 +192,24 @@ DV.model.Annotations.prototype = {
       DV.jQuery('#DV-annotation-' + anno.id + ', #DV-listAnnotation-' + anno.id).remove();
   },
 
-  //Add/remove CSS styling for approval (temporary solution; does not modify underlying data.. will it survive redraw?)
-  markApproval: function(anno_id, approval) {
-      var annoDOM = DV.jQuery('#DV-annotation-' + anno_id + ' .DV-annotationRegion')
-      if(approval){ annoDOM.addClass('DV-approved'); }else{ annoDOM.removeClass('DV-approved'); }
+  //Add/remove CSS styling for approval (temporary solution; does not persist anno model changes fully.. will it survive redraw?)
+  markApproval: function(anno_id, group_id, approval) {
+      var matchedAnno = this.findAnnotation({id: anno_id});
+      var annoDOM = DV.jQuery('#DV-annotation-' + anno_id + ' .DV-annotationRegion');
+      annoDOM.removeClass('DV-approved');
+      annoDOM.removeClass('DV-semi-approved');
+
+      //Update anno approved count
+      for(var i=0; i < matchedAnno.groups.length; i++){
+          if( matchedAnno.groups[i].group_id == group_id ){
+              if(approval){ matchedAnno.groups[i].approved_count++; }
+              else{ matchedAnno.groups[i].approved_count--; }
+          }
+      }
+
+      var approvalState = this.getApprovalState(matchedAnno);
+      if(approvalState == 1){ annoDOM.addClass('DV-semi-approved'); }
+      if(approvalState == 2){ annoDOM.addClass('DV-approved'); }
   },
 
   // Offsets all document pages based on interleaved page annotations.

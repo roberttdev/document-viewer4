@@ -333,8 +333,8 @@ DV.Api.prototype = {
 
 
   //Activate/deactivate 'approved' view for anno (temporary, data does not update)
-  markApproval: function(anno_id, approval) {
-      this.viewer.models.annotations.markApproval(anno_id, approval);
+  markApproval: function(anno_id, group_id, approval) {
+      this.viewer.models.annotations.markApproval(anno_id, group_id, approval);
   },
 
   // ---------------------- Enter/Leave Edit Modes -----------------------------

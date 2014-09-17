@@ -40,6 +40,14 @@
       border:3px solid rgb(46, 200, 0);
       border:3px solid rgba(46, 227, 37, 0.5);
   }
+ .DV-annotationRegion.DV-semi-approved {
+     background: rgb(252, 162, 3);
+     background: rgba(252, 162, 3, 0.2);
+
+     border:3px solid rgb(250, 152, 5);
+     border:3px solid rgba(250, 152, 5, 0.5);
+ }
+
   .DV-coverVisible .DV-annotationRegion {
     background: rgb(255, 227, 37);
     background: rgba(255, 227, 37, 0.1);
