@@ -117,8 +117,9 @@ DV.model.Annotations.prototype = {
 
   //Populate a group relations with data from client, if missing
   syncGroupAnnotation: function(annoId, groupId) {
-      dvAnno = this.findAnnotation({id: annoId});
-      if( dvAnno.groups.indexOf(groupId) < 0 ){ dvAnno.groups.push(groupId); }
+      var dvAnno = this.findAnnotation({id: annoId});
+      var newGroup = {group_id: groupId, approved_count: 0}
+      if( dvAnno.groups.indexOf(groupId) < 0 ){ dvAnno.groups.push(newGroup); }
   },
 
   //Remove current annotations from DOM and reload from schema
