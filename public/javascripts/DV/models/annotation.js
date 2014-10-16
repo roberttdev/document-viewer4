@@ -197,8 +197,11 @@ DV.model.Annotations.prototype = {
   markApproval: function(anno_id, group_id, approval) {
       var matchedAnno = this.findAnnotation({id: anno_id});
       var annoDOM = DV.jQuery('#DV-annotation-' + anno_id + ' .DV-annotationRegion');
+      var allAnnoDOM = DV.jQuery('.DV-allAnnotations .DV-annotation[rel=aid-' + anno_id + '] .DV-annotationRegion');
       annoDOM.removeClass('DV-approved');
+      allAnnoDOM.removeClass('DV-approved');
       annoDOM.removeClass('DV-semi-approved');
+      allAnnoDOM.removeClass('DV-semi-approved');
 
       //Update anno approved count
       for(var i=0; i < matchedAnno.groups.length; i++){
@@ -209,8 +212,14 @@ DV.model.Annotations.prototype = {
       }
 
       var approvalState = this.getApprovalState(matchedAnno);
-      if(approvalState == 1){ annoDOM.addClass('DV-semi-approved'); }
-      if(approvalState == 2){ annoDOM.addClass('DV-approved'); }
+      if(approvalState == 1){
+          annoDOM.addClass('DV-semi-approved');
+          allAnnoDOM.addClass('DV-semi-approved');
+      }
+      if(approvalState == 2){
+          annoDOM.addClass('DV-approved');
+          allAnnoDOM.addClass('DV-approved');
+      }
   },
 
   // Offsets all document pages based on interleaved page annotations.
