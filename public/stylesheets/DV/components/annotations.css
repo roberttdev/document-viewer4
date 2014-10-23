@@ -302,6 +302,7 @@
     font: 13px/18px Georgia, Times, serif;
     cursor:text;
     color: #333;
+    word-wrap: break-word;
   }
 
   .DV-annotationAuthor {
