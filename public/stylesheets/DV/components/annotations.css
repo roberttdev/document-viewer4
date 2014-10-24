@@ -190,8 +190,9 @@
     font-size:12px;
     color:#000;
     padding:0;
-    max-width: 75%;
+    max-width: 67%;
     cursor: pointer;
+    word-wrap: break-word;
   }
     .DV-annotationTitle:hover {
       text-decoration: underline;
