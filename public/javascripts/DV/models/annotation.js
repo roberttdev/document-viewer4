@@ -180,7 +180,7 @@ DV.model.Annotations.prototype = {
     else {
         goneAnno = this.byId[anno.id]
         delete this.byId[anno.id];
-        var i = anno.page - 1;
+        var i = anno.page.pageNumber - 1;
         this.byPage[i] = DV._.without(this.byPage[i], goneAnno);
         this.sortAnnotations();
         this.removeAnnotationFromDOM(anno);

@@ -43,8 +43,8 @@
             <span class="DV-trigger DV-annotationNext" title="<%= DV.t('next_note') %>"><%= DV.t('next') %></span>
           </div>
           <div class="DV-annotationGoto DV-editHidden"><div class="DV-trigger"><%= DV.t('pg') %><%= pageNumber %></div></div>
-          <div class="DV-annotationTitle DV-editHidden"><%= title %></div>
-          <input class="DV-annotationTitleInput DV-editVisible" type="text" placeholder="<%= DV.t('annotation_title') %>" value="<%= title.replace(/"/g, '&quot;') %>" />
+          <div class="DV-annotationTitle DV-editHidden"><%- title %></div>
+          <input class="DV-annotationTitleInput DV-editVisible" type="text" placeholder="<%= DV.t('annotation_title') %>" value="<%- title.replace(/"/g, '&quot;') %>" />
           <div class="DV-errorMsg"></div>
           <% if (access == 'exclusive') { %>
             <div class="DV-annotationDraftLabel DV-editHidden DV-interface"><%= DV.t('draft') %></div>
@@ -55,9 +55,9 @@
     </div>
 
     <div class="DV-annotationBody DV-editHidden">
-      <%= text %>
+      <%- text %>
     </div>
-    <textarea class="DV-annotationTextArea DV-editVisible" style="width: <%= bWidth %>px;"><%= text %></textarea>
+    <textarea class="DV-annotationTextArea DV-editVisible" style="width: <%= bWidth %>px;"><%- text %></textarea>
 
     <div class="DV-annotationMeta <%= accessClass %>">
       <% if (author) { %>
