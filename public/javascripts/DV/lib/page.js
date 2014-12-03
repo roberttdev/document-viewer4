@@ -79,6 +79,11 @@ DV.Page.prototype.draw = function(argHash) {
   // Only draw annotations if page number has changed or the
   // forceAnnotationRedraw flag is true.
   if(this.pageNumber != this.index+1 || argHash.forceAnnotationRedraw === true){
+    //If the removed page has the active annotation, hide/cancel it
+    if( this.viewer.activeAnnotation && (this.pageNumber == this.viewer.activeAnnotation.model.page) ){
+      this.viewer.activeAnnotation.hide();
+    }
+
     for(var i = 0; i < this.annotations.length;i++){
       this.annotations[i].remove();
       delete this.annotations[i];
@@ -88,7 +93,7 @@ DV.Page.prototype.draw = function(argHash) {
     this.annotations = [];
 
     // if there are annotations for this page, it will proceed and attempt to draw
-    var byPage = this.model_annotations.byPage[this.index];
+    var byPage = this.viewer.schema.data.annotationsByPage[this.index];
     if (byPage) {
       // Loop through all annotations and add to page
       for (var i=0; i < byPage.length; i++) {
@@ -111,30 +116,15 @@ DV.Page.prototype.draw = function(argHash) {
           this.hasLayerRegional = true;
         }
 
+        /*DACTYL - REMOVED (and replaced by byId ref below)
         var html = this.viewer.$('.DV-allAnnotations .DV-annotation[rel=aid-'+anno.id+']').clone();
         html.attr('id','DV-annotation-' + anno.id);
         html.find('.DV-img').each(function() {
           var el = DV.jQuery(this);
           el.attr('src', el.attr('data-src'));
-        });
+        }); */
 
-        var newAnno = new DV.Annotation({
-          renderedHTML: html,
-          id:           anno.id,
-          page:         this,
-          pageEl:       this.pageEl,
-          annotationContainerEl : this.annotationContainerEl,
-          pageNumber:   this.pageNumber,
-          state:        'collapsed',
-          top:          anno.y1,
-          left:         anno.x1,
-          width:        anno.x1 + anno.x2,
-          height:       anno.y1 + anno.y2,
-          active:       active,
-          showEdit:     argHash.edit,
-          type:         anno.type
-          }
-        );
+        var newAnno = this.createPageAnnotation(anno, active, argHash.edit);
 
         this.annotations.push(newAnno);
 
@@ -253,3 +243,79 @@ DV.Page.prototype.drawImage = function(imageURL) {
   // Update the status of the image load
   this.el.addClass('DV-loaded').removeClass('DV-loading');
 };
+
+
+//Create Page Annotation from regular Annotation and return
+DV.Page.prototype.createPageAnnotation = function(anno, active, edit) {
+  return new DV.AnnotationView({
+    id: anno.id,
+    page: this,
+    pageEl: this.pageEl,
+    annotationContainerEl: this.annotationContainerEl,
+    pageNumber: this.pageNumber,
+    state: 'collapsed',
+    top: anno.y1,
+    left: anno.x1,
+    width: anno.x1 + anno.x2,
+    height: anno.y1 + anno.y2,
+    active: active,
+    showEdit: edit,
+    type: anno.type,
+    groups: anno.groups,
+    access: anno.access
+  });
+};
+
+
+//Create new annotation and add it to existing annotation list
+DV.Page.prototype.addPageAnnotation = function(anno){
+  var newAnno = this.createPageAnnotation(anno, false, true);
+  var insertIndex = DV._.sortedIndex(this.annotations, newAnno, function(anno){
+    return anno.position.top;
+  });
+  this.annotations.splice(insertIndex, 0, newAnno);
+};
+
+
+//Remove annotation from annotation list
+DV.Page.prototype.removePageAnnotation = function(anno){
+  var removeAnno = this.findAnnotationView(anno.id);
+  if(removeAnno) {
+    removeAnno.remove();
+    this.annotations = DV._.without(this.annotations, removeAnno);
+    this.viewer.elements.window.removeClass('DV-coverVisible');
+  }
+};
+
+
+//Refresh annotation
+//active: Whether to make the refreshed annotation active (optional)
+//groupId: The group to set the display to (optional)
+DV.Page.prototype.refreshPageAnnotation = function(anno, groupId, active){
+  var refreshAnno = this.findAnnotationView(anno.id);
+  refreshAnno.refresh(groupId, active);
+};
+
+
+// Check page's annotations in schema and add any missing ones
+DV.Page.prototype.syncAnnotations = function() {
+  var byPage = this.viewer.schema.data.annotationsByPage[this.index];
+  if (byPage) {
+    // Loop through all annotations and splice in any additions
+    for (var i=0; i < byPage.length; i++) {
+      var anno = byPage[i];
+
+      if( i >= this.annotations.length || (anno.id != this.annotations[i].id) ) {
+        var newAnno = this.createPageAnnotation(anno, false, true);
+
+        this.annotations.splice(i, 0, newAnno);
+      }
+    }
+  }
+};
+
+
+//Find annotation view on page by annotation ID
+DV.Page.prototype.findAnnotationView = function(annoID){
+  return _.find(this.annotations, function (listAnno) { return listAnno.id == annoID; });
+}

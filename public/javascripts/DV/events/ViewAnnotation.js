@@ -2,9 +2,8 @@ DV.Schema.events.ViewAnnotation = {
   next: function(e){
     var viewer              = this.viewer;
     var activeAnnotationId  = viewer.activeAnnotationId;
-    var annotationsModel    = this.models.annotations;
     var nextAnnotation      = (activeAnnotationId === null) ?
-        annotationsModel.getFirstAnnotation() : annotationsModel.getNextAnnotation(activeAnnotationId);
+        viewer.schema.getFirstAnnotation() : viewer.schema.getNextAnnotation(activeAnnotationId);
 
     if (!nextAnnotation){
       return false;
@@ -18,10 +17,9 @@ DV.Schema.events.ViewAnnotation = {
   previous: function(e){
     var viewer              = this.viewer;
     var activeAnnotationId  = viewer.activeAnnotationId;
-    var annotationsModel    = this.models.annotations;
 
     var previousAnnotation = (!activeAnnotationId) ?
-    annotationsModel.getFirstAnnotation() : annotationsModel.getPreviousAnnotation(activeAnnotationId);
+    viewer.schema.getFirstAnnotation() : viewer.schema.getPreviousAnnotation(activeAnnotationId);
     if (!previousAnnotation){
       return false;
     }

@@ -11,11 +11,11 @@ DV._.extend(DV.Schema.helpers,{
     this.viewer.$('.DV-annotationTitleInput', annoEl).val(anno.title);
     this.viewer.$('.DV-annotationTextArea', annoEl).val(anno.text);
     if (anno.unsaved) {
-      this.models.annotations.removeAnnotation(anno);
+      this.viewer.pageSet.removePageAnnotation(anno);
     } else {
       annoEl.removeClass('DV-editing');
     }
-    this.models.annotations.fireCancelCallbacks(anno);
+    this.viewer.fireCancelCallbacks(anno);
   },
   saveAnnotation : function(e, option) {
     var target = this.viewer.$(e.target);
@@ -38,20 +38,28 @@ DV._.extend(DV.Schema.helpers,{
 
     if (target.hasClass('DV-saveAnnotationDraft'))  anno.access = 'exclusive';
     else if (annoEl.hasClass('DV-accessExclusive')) anno.access = 'public';
+
+    /* DACTYL - REMOVED
     if (option == 'onlyIfText' &&
         (!anno.title || anno.title == DV.t('untitled_note')) &&
         !anno.text &&
         !anno.server_id) {
       return this.models.annotations.removeAnnotation(anno);
-    }
+    } */
+
     annoEl.removeClass('DV-editing');
-    this.models.annotations.fireSaveCallbacks(anno);
-    this.viewer.api.redraw(true);
-  },
+    this.viewer.fireSaveCallbacks(anno);
+
+    //DACTYL - REMOVED this.viewer.api.redraw(true);
+
+    this.viewer.pageSet.refreshPageAnnotation(anno);
+  }
+
+  /* DACTYL - REMOVED
   deleteAnnotation : function(e) {
     var annoEl = this.viewer.$(e.target).closest(this.annotationClassName);
     var anno   = this.getAnnotationModel(annoEl);
     this.models.annotations.removeAnnotation(anno);
-    this.models.annotations.fireDeleteCallbacks(anno);
-  }
+    this.viewer.fireDeleteCallbacks(anno);
+  } */
 });

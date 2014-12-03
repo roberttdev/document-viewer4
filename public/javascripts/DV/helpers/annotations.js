@@ -1,7 +1,7 @@
 DV._.extend(DV.Schema.helpers, {
   getAnnotationModel : function(annoEl) {
-    var annoId = parseInt(annoEl.attr('rel').match(/\d+/), 10);
-    return this.models.annotations.getAnnotation(annoId);
+    var annoId = parseInt(annoEl.attr('data-id').match(/\d+/), 10);
+    return this.viewer.schema.getAnnotation(annoId);
   },
   // Return the annotation Object that connects with the element in the DOM
   getAnnotationObject: function(annotation){

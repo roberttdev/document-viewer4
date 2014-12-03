@@ -3,7 +3,7 @@ DV._.extend(DV.Schema.helpers, {
 
   showAnnotations : function() {
     if (this.viewer.options.showAnnotations === false) return false;
-    return DV._.size(this.models.annotations.byId) > 0;
+    return DV._.size(this.viewer.schema.data.annotationsById) > 0;
   },
 
   renderViewer: function(){

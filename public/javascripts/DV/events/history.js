@@ -24,7 +24,7 @@ DV._.extend(DV.Schema.events, {
     var annotation  = parseInt(annotation,10);
 
     if(this.viewer.state === 'ViewDocument'){
-      this.viewer.pageSet.showAnnotation(this.viewer.models.annotations.byId[annotation]);
+      this.viewer.pageSet.showAnnotation(this.viewer.schema.data.annotationsById[annotation]);
     }else{
       this.models.document.setPageIndex(pageIndex);
       this.viewer.pageSet.setActiveAnnotation(annotation);
@@ -39,7 +39,7 @@ DV._.extend(DV.Schema.events, {
     var viewer = this.viewer;
 
     if(viewer.state === 'ViewAnnotation'){
-      viewer.pageSet.showAnnotation(this.viewer.models.annotations.byId[annotation]);
+      viewer.pageSet.showAnnotation(this.viewer.schema.data.annotationsById[annotation]);
     }else{
       viewer.activeAnnotationId = annotation;
       this.viewer.open('ViewAnnotation');

@@ -171,10 +171,10 @@ DV.Api.prototype = {
   },
 
   // Redraw the UI. Call redraw(true) to also redraw annotations and pages.
-  redraw : function(redrawAll) {
+  /*DACTYL - REMOVED redraw : function(redrawAll) {
     if (redrawAll) {
       this.viewer.models.annotations.renderAnnotations();
-      this.viewer.models.document.computeOffsets();
+       this.viewer.models.document.computeOffsets();
     }
     this.viewer.helpers.renderNavigation();
     this.viewer.helpers.renderComponents();
@@ -183,78 +183,82 @@ DV.Api.prototype = {
       this.viewer.pageSet.buildPages({noNotes : true});
       this.viewer.pageSet.reflowPages();
     }
-  },
+  }, */
 
+  /*DACTYL - REMOVED
   getAnnotationsBySortOrder : function() {
     return this.viewer.models.annotations.sortAnnotations();
-  },
+  },*/
 
   getAnnotationsByPageIndex : function(idx) {
-    return this.viewer.models.annotations.getAnnotations(idx);
+    return this.viewer.schema.getAnnotationsByPage(idx);
   },
 
   getAnnotation : function(aid) {
-    return this.viewer.models.annotations.getAnnotation(aid);
+    return this.viewer.schema.getAnnotation(aid);
   },
 
   // Add a new annotation to the document, prefilled to any extent.
   addAnnotation : function(anno) {
     anno = this.viewer.schema.loadAnnotation(anno);
-    this.viewer.models.annotations.sortAnnotations();
-    this.redraw(true);
+    this.viewer.pageSet.addPageAnnotation(anno);
+    //this.viewer.pageSet.currentPage.syncAnnotations();
     this.viewer.pageSet.showAnnotation(anno, {active: true, edit : true});
     return anno;
   },
 
   // Find annotation and make it the active one
   selectAnnotation: function(anno, showEdit) {
-      anno = this.viewer.models.annotations.findAnnotation(anno);
+      anno = this.viewer.schema.findAnnotation(anno);
       this.viewer.pageSet.showAnnotation(anno, {active: true, edit : showEdit});
   },
 
   // Remove annotation/group relationship (and annotation if no relationships left)
   deleteAnnotation: function(anno, group) {
-      anno = this.viewer.models.annotations.findAnnotation(anno);
-      this.viewer.models.annotations.removeAnnotation(anno, group);
+      anno = this.viewer.schema.findAnnotation(anno);
+      if ( this.viewer.schema.removeAnnotationGroup(anno, group) ) {
+        this.viewer.pageSet.removePageAnnotation(anno);
+      }else{
+        this.viewer.pageSet.refreshPageAnnotation(anno);
+      }
   },
 
   //Populate any missing annotation IDs with data from client
   //locationIds: hash containing ID and location
   syncAnnotationIDs: function(locationIds) {
-      this.viewer.models.annotations.syncIDs(locationIds);
+      this.viewer.schema.syncIDs(locationIds);
   },
 
   //Pass group association to DV, to update DV defs if necessary
   syncGroupAnnotation: function(annoId, groupId){
-      this.viewer.models.annotations.syncGroupAnnotation(annoId, groupId);
-      this.redraw(true);
+      var syncedAnno = this.viewer.schema.addAnnotationGroup(annoId, groupId);
+      this.viewer.pageSet.refreshPageAnnotation(syncedAnno, groupId);
   },
 
   //Reload current annotations store with passed in annotations
   reloadAnnotations: function(annos){
       this.viewer.schema.reloadAnnotations(annos);
-      this.viewer.models.annotations.reloadAnnotations();
-      this.redraw(true);
+      this.viewer.pageSet.redraw(true, true);
   },
 
   // Register a callback for when an annotation is saved.
   onAnnotationSave : function(callback) {
-    this.viewer.models.annotations.saveCallbacks.push(callback);
+    this.viewer.saveCallbacks.push(callback);
   },
 
   // Register a callback for when an annotation is deleted.
   onAnnotationDelete : function(callback) {
-    this.viewer.models.annotations.deleteCallbacks.push(callback);
+    this.viewer.deleteCallbacks.push(callback);
   },
 
   // Register a callback for when an annotation is deleted.
   onAnnotationSelect : function(callback) {
-      this.viewer.models.annotations.selectCallbacks.push(callback);
+    this.viewer.selectCallbacks.push(callback);
   },
 
   // Register a callback for when annotating is cancelled.
   onAnnotationCancel : function(callback) {
-      this.viewer.models.annotations.cancelCallbacks.push(callback);
+    this.viewer.cancelCallbacks.push(callback);
   },
 
   setConfirmStateChange : function(callback) {
@@ -326,15 +330,25 @@ DV.Api.prototype = {
     delete DV.viewers[this.viewer.schema.document.id];
   },
 
-  //Hide active annotation(s), mainly
+  //Abandon current active annotation (hide or remove)
   cleanUp: function() {
-      this.viewer.pageSet.cleanUp();
+    if(this.viewer.activeAnnotation){
+      var anno = this.viewer.activeAnnotation.model;
+      if( anno.unsaved == true ){
+        //If unsaved, just remove completely
+        this.viewer.schema.removeAnnotationGroup(anno, anno.groups[0].group_id);
+        this.viewer.pageSet.removePageAnnotation(anno);
+      }else {
+        this.viewer.activeAnnotation.hide(true);
+      }
+    }
   },
 
 
   //Activate/deactivate 'approved' view for anno (temporary, data does not update)
   markApproval: function(anno_id, group_id, approval) {
-      this.viewer.models.annotations.markApproval(anno_id, group_id, approval);
+      var anno = this.viewer.schema.markApproval(anno_id, group_id, approval);
+      this.viewer.pageSet.refreshPageAnnotation(anno, group_id, false);
   },
 
   // ---------------------- Enter/Leave Edit Modes -----------------------------

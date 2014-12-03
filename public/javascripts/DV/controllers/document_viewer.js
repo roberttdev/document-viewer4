@@ -27,7 +27,11 @@ DV.DocumentViewer = function(options) {
   this.compiled           = {};
   this.tracker            = {};
 
-  this.onStateChangeCallbacks = [];
+  this.onStateChangeCallbacks   = [];
+  this.saveCallbacks            = [];
+  this.deleteCallbacks          = [];
+  this.selectCallbacks          = [];
+  this.cancelCallbacks          = [];
 
   this.events     = DV._.extend(this.events, {
     viewer      : this,
@@ -67,10 +71,10 @@ DV.DocumentViewer = function(options) {
 };
 
 DV.DocumentViewer.prototype.loadModels = function() {
-  this.models.chapters     = new DV.model.Chapters(this);
+  //**REMOVED FOR DACTYL**this.models.chapters     = new DV.model.Chapters(this);
   this.models.document     = new DV.model.Document(this);
   this.models.pages        = new DV.model.Pages(this);
-  this.models.annotations  = new DV.model.Annotations(this);
+  /* DACTYL- REMOVED this.models.annotations  = new DV.model.Annotations(this); */
   this.models.removedPages = {};
 };
 
@@ -93,6 +97,22 @@ DV.DocumentViewer.prototype.slapIE = function() {
 
 DV.DocumentViewer.prototype.notifyChangedState = function() {
   DV._.each(this.onStateChangeCallbacks, function(c) { c(); });
+};
+
+DV.DocumentViewer.prototype.fireSaveCallbacks  = function(anno) {
+  DV._.each(this.saveCallbacks, function(c){ c(anno); });
+};
+
+DV.DocumentViewer.prototype.fireDeleteCallbacks = function(anno) {
+  DV._.each(this.deleteCallbacks, function(c){ c(anno); });
+};
+
+DV.DocumentViewer.prototype.fireSelectCallbacks = function(anno) {
+  DV._.each(this.selectCallbacks, function(c){ c(anno); });
+};
+
+DV.DocumentViewer.prototype.fireCancelCallbacks = function(anno) {
+  DV._.each(this.cancelCallbacks, function (c) { c(anno); });
 };
 
 // Record a hit on this document viewer.

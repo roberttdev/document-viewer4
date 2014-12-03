@@ -13,6 +13,14 @@ DV.PageSet = function(viewer){
   this.zoomText();
 };
 
+//Return reference to page requested by sequential page #
+DV.PageSet.prototype.getPageByNumber = function(pageNum){
+  for(var i=0; i < 3; i++){
+    if(this.pages['p' + i].pageNumber == pageNum){ return this.pages['p' + i]; }
+  }
+  return null;
+};
+
 // used to call the same method with the same params against all page instances
 DV.PageSet.prototype.execute = function(action,params){
   this.pages.each(function(pageInstance){
@@ -34,7 +42,7 @@ DV.PageSet.prototype.buildPages = function(options) {
     if (page.currentPage == true) { this.currentPage = this.pages[page.label]; }
   }, this);
 
-  this.viewer.models.annotations.renderAnnotations();
+  /*DACTYL - REMOVED this.viewer.models.annotations.renderAnnotations(); */
 };
 
 // used to generate references for the build action
@@ -152,6 +160,27 @@ DV.PageSet.prototype.redraw = function(stopResetOfPosition, redrawAnnotations) {
   }
 };
 
+//Add annotation to its page. Takes in standard (schema) anno hash
+DV.PageSet.prototype.addPageAnnotation = function(anno){
+  this.getPageByNumber(anno.page).addPageAnnotation(anno);
+};
+
+//Remove annotation from its page. Takes in standard (schema) anno hash
+DV.PageSet.prototype.removePageAnnotation = function(anno){
+  //If page is visible, send remove request to it
+  var page = this.getPageByNumber(anno.page);
+  if(page){ page.removePageAnnotation(anno); }
+};
+
+//Refresh annotation display. Takes in standard (schema) anno hash
+//active: Whether to make the refreshed annotation active (optional)
+//groupId: The group to set the display to (optional)
+DV.PageSet.prototype.refreshPageAnnotation = function(anno, groupId, active){
+  //If page is visible, send refresh request to it
+  var page = this.getPageByNumber(anno.page);
+  if(page){ page.refreshPageAnnotation(anno, groupId, active); }
+};
+
 // set the annotation to load ahead of time
 DV.PageSet.prototype.setActiveAnnotation = function(annotationId, edit){
   this.viewer.annotationToLoadId   = annotationId;
@@ -180,7 +209,7 @@ DV.PageSet.prototype.showAnnotation = function(argHash, showHash){
     }
     this.setActiveAnnotation(argHash.id, showHash.edit);
 
-    var isPage = this.viewer.models.annotations.byId[argHash.id].type == 'page';
+    var isPage = this.viewer.schema.data.annotationsById[argHash.id].type == 'page';
     var nudge  = isPage ? -7 : 36;
     var offset = argHash.top - nudge;
 

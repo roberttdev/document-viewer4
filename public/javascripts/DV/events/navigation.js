@@ -11,7 +11,7 @@ DV._.extend(DV.Schema.events, {
 
     }else if (noteEl.length) {
       var aid         = noteEl[0].id.replace('DV-annotationMarker-','');
-      var annotation  = this.models.annotations.getAnnotation(aid);
+      var annotation  = this.viewer.schema.getAnnotation(aid);
       var pageNumber  = parseInt(annotation.index,10)+1;
 
       if(this.viewer.state === 'ViewText'){
