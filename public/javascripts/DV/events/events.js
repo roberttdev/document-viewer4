@@ -70,7 +70,7 @@ DV.Schema.events = {
       me.elements.currentPage.text(pageNumber);
       me.elements.textCurrentPage.text('p. '+(pageNumber));
       me.models.document.setPageIndex(pageIndex);
-      me.helpers.setActiveChapter(me.models.chapters.getChapterId(pageIndex));
+      /*DACTYL - REMOVED me.helpers.setActiveChapter(me.models.chapters.getChapterId(pageIndex)); */
 
       if (me.viewer.openEditor == 'editText' &&
           !(pageNumber in me.models.document.originalPageText)) {
