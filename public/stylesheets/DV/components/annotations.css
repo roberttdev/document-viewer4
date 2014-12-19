@@ -589,7 +589,7 @@
   display: block;
 }
 
-.DV-isContributor .DV-annotation.DV-accessPrivate .DV-annotationMeta,
+.DV-isContributor .DV-annotation .DV-annotationMeta,
 .DV-isOwner .DV-annotation .DV-annotationMeta,
 .DV-isReviewer .DV-annotation .DV-annotationMeta {
   display: block;
