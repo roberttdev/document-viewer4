@@ -157,7 +157,7 @@ DV.AnnotationView.prototype.refresh = function(groupId, active) {
   this.renderedHTML = $(this.render(gid));
   this.remove();
   this.add();
-  if(active != false){ this.show({callbacks: false}); }
+  if(active != false){ this.show({callbacks: false}); }else{ this.hide(true); }
 };
 
 
