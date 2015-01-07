@@ -236,7 +236,7 @@ DV.AnnotationView.prototype.hide = function(forceOverlayHide){
   }
 
   //If unsaved, just remove completely
-  if(this.viewer.activeAnnotation.model.unsaved){ this.remove(); }
+  if(this.viewer.activeAnnotation && this.viewer.activeAnnotation.model.unsaved){ this.remove(); }
 
   // stop tracking this annotation
   this.viewer.activeAnnotation                = null;
