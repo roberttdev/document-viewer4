@@ -86,11 +86,6 @@ DV.AnnotationView.prototype.render = function(groupId){
 
   argHash.orderClass = ''; //Can remove this if no longer needed; remove from template too
   argHash.options = this.viewer.options;
-  /*DACTYL - REMOVED
-  if (this.position == 1) this.orderClass += ' DV-firstAnnotation';
-  if (this.position == this.schemthis.annotationsById.length) this.orderClass += ' DV-lastAnnotation';
-  */
-
   argHash.approvedClass = '';
   var approvalState = this.getApprovalState();
   if(approvalState == 1){ argHash.approvedClass = ' DV-semi-approved'; }
@@ -120,25 +115,6 @@ DV.AnnotationView.prototype.getApprovalState = function(){
 
 // Add annotation to page
 DV.AnnotationView.prototype.add = function(){
-/* DACTYL - REMOVED
-  if(this.type === 'page'){
-      this.annotationEl = this.renderedHTML.insertBefore(this.annotationContainerEl);
-  }else{
-    if(this.page.annotations.length > 0){
-      for(var i = 0,len = this.page.annotations.length;i<len;i++){
-        if(this.page.annotations[i].id === this.id){
-
-          return false;
-        }else{
-
-          this.annotationEl = this.renderedHTML.appendTo(this.annotationContainerEl);
-        }
-      }
-    }else{
-
-      this.annotationEl = this.renderedHTML.appendTo(this.annotationContainerEl);
-    }
-  } */
   this.annotationEl = this.renderedHTML.appendTo(this.annotationContainerEl);
 };
 

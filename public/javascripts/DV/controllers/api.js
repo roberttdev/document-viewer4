@@ -170,26 +170,6 @@ DV.Api.prototype = {
     }
   },
 
-  // Redraw the UI. Call redraw(true) to also redraw annotations and pages.
-  /*DACTYL - REMOVED redraw : function(redrawAll) {
-    if (redrawAll) {
-      this.viewer.models.annotations.renderAnnotations();
-       this.viewer.models.document.computeOffsets();
-    }
-    this.viewer.helpers.renderNavigation();
-    this.viewer.helpers.renderComponents();
-    if (redrawAll) {
-      this.viewer.elements.window.removeClass('DV-coverVisible');
-      this.viewer.pageSet.buildPages({noNotes : true});
-      this.viewer.pageSet.reflowPages();
-    }
-  }, */
-
-  /*DACTYL - REMOVED
-  getAnnotationsBySortOrder : function() {
-    return this.viewer.models.annotations.sortAnnotations();
-  },*/
-
   getAnnotationsByPageIndex : function(idx) {
     return this.viewer.schema.getAnnotationsByPage(idx);
   },

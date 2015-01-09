@@ -36,7 +36,6 @@ DV.model.Document.prototype = {
   setPageIndex : function(index) {
     this.currentPageIndex = index;
     this.viewer.elements.currentPage.text(this.currentPage());
-    //DACTYL - CHAPTER FUNC REMOVED this.viewer.helpers.setActiveChapter(this.viewer.models.chapters.getChapterId(index));
     DV._.each(this.onPageChangeCallbacks, function(c) { c(); });
     return index;
   },
@@ -66,7 +65,6 @@ DV.model.Document.prototype = {
   },
 
   computeOffsets: function() {
-    /* DACTYL - REMOVED var annotationModel  = this.viewer.models.annotations; */
     var totalDocHeight   = 0;
     var adjustedOffset   = 0;
     var len              = this.totalPages;
@@ -74,11 +72,6 @@ DV.model.Document.prototype = {
     var scrollPos        = this.viewer.elements.window[0].scrollTop;
 
     for(var i = 0; i < len; i++) {
-      /* DACTYL - REMOVED
-      if(annotationModel.offsetsAdjustments[i]){
-        adjustedOffset   = annotationModel.offsetsAdjustments[i];
-      } */
-
       var pageHeight     = this.viewer.models.pages.getPageHeight(i);
       var previousOffset = this.offsets[i] || 0;
       var h              = this.offsets[i] = adjustedOffset + totalDocHeight;

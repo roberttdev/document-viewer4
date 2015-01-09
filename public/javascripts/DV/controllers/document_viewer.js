@@ -71,10 +71,8 @@ DV.DocumentViewer = function(options) {
 };
 
 DV.DocumentViewer.prototype.loadModels = function() {
-  //**REMOVED FOR DACTYL**this.models.chapters     = new DV.model.Chapters(this);
   this.models.document     = new DV.model.Document(this);
   this.models.pages        = new DV.model.Pages(this);
-  /* DACTYL- REMOVED this.models.annotations  = new DV.model.Annotations(this); */
   this.models.removedPages = {};
 };
 

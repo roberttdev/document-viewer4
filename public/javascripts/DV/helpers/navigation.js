@@ -1,8 +1,8 @@
 DV._.extend(DV.Schema.helpers, {
   resetNavigationState: function(){
-    var elements                      = this.elements;
-    //DACTYL - REMOVED if (elements.chaptersContainer.length) elements.chaptersContainer[0].id  = '';
-    if (elements.navigation.length)        elements.navigation[0].id         = '';
+    var elements = this.elements;
+
+    if (elements.navigation.length) elements.navigation[0].id = '';
   },
   setActiveChapter: function(chapterId){
     if (chapterId) this.elements.chaptersContainer.attr('id','DV-selectedChapter-'+chapterId);

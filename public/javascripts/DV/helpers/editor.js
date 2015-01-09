@@ -39,27 +39,10 @@ DV._.extend(DV.Schema.helpers,{
     if (target.hasClass('DV-saveAnnotationDraft'))  anno.access = 'exclusive';
     else if (annoEl.hasClass('DV-accessExclusive')) anno.access = 'public';
 
-    /* DACTYL - REMOVED
-    if (option == 'onlyIfText' &&
-        (!anno.title || anno.title == DV.t('untitled_note')) &&
-        !anno.text &&
-        !anno.server_id) {
-      return this.models.annotations.removeAnnotation(anno);
-    } */
-
     annoEl.removeClass('DV-editing');
     this.viewer.fireSaveCallbacks(anno);
-
-    //DACTYL - REMOVED this.viewer.api.redraw(true);
 
     this.viewer.pageSet.refreshPageAnnotation(anno);
   }
 
-  /* DACTYL - REMOVED
-  deleteAnnotation : function(e) {
-    var annoEl = this.viewer.$(e.target).closest(this.annotationClassName);
-    var anno   = this.getAnnotationModel(annoEl);
-    this.models.annotations.removeAnnotation(anno);
-    this.viewer.fireDeleteCallbacks(anno);
-  } */
 });

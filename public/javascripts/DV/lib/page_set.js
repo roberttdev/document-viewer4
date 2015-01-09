@@ -41,8 +41,6 @@ DV.PageSet.prototype.buildPages = function(options) {
 
     if (page.currentPage == true) { this.currentPage = this.pages[page.label]; }
   }, this);
-
-  /*DACTYL - REMOVED this.viewer.models.annotations.renderAnnotations(); */
 };
 
 // used to generate references for the build action

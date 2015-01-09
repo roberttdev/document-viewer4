@@ -116,14 +116,6 @@ DV.Page.prototype.draw = function(argHash) {
           this.hasLayerRegional = true;
         }
 
-        /*DACTYL - REMOVED (and replaced by byId ref below)
-        var html = this.viewer.$('.DV-allAnnotations .DV-annotation[rel=aid-'+anno.id+']').clone();
-        html.attr('id','DV-annotation-' + anno.id);
-        html.find('.DV-img').each(function() {
-          var el = DV.jQuery(this);
-          el.attr('src', el.attr('data-src'));
-        }); */
-
         var newAnno = this.createPageAnnotation(anno, active, argHash.edit);
 
         this.annotations.push(newAnno);

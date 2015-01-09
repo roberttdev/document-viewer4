@@ -47,16 +47,12 @@ DV.Schema.helpers = {
         context.open('ViewThumbnails');
       });
       viewer.$('.DV-textView').delegate('.DV-trigger','click',function(e){
-
-        // history.save('text/p'+context.models.document.currentPage());
         context.open('ViewText');
       });
-      //DACTYL - removed viewer.$('.DV-allAnnotations').delegate('.DV-annotationGoto .DV-trigger','click', DV.jQuery.proxy(this.gotoPage, this));
 
       viewer.$('form.DV-searchDocument').submit(this.events.compile('search'));
       viewer.$('.DV-searchBar').delegate('.DV-closeSearch','click',function(e){
         e.preventDefault();
-        // history.save('text/p'+context.models.document.currentPage());
         context.open('ViewText');
       });
       viewer.$('.DV-searchBox').delegate('.DV-searchInput-cancel', 'click', DV.jQuery.proxy(this.clearSearch, this));
@@ -81,7 +77,6 @@ DV.Schema.helpers = {
       collection.delegate('.DV-cancelEdit','click', DV.jQuery.proxy(this.cancelAnnotationEdit, this));
       collection.delegate('.DV-saveAnnotation','click', DV.jQuery.proxy(this.saveAnnotation, this));
       collection.delegate('.DV-saveAnnotationDraft','click', DV.jQuery.proxy(this.saveAnnotation, this));
-      /* DACTYL - REMOVED collection.delegate('.DV-deleteAnnotation','click', DV.jQuery.proxy(this.deleteAnnotation, this)); */
       collection.delegate('.DV-pageNumber', 'click', DV._.bind(this.permalinkPage, this, 'document'));
       collection.delegate('.DV-textCurrentPage', 'click', DV._.bind(this.permalinkPage, this, 'text'));
       collection.delegate('.DV-annotationTitle', 'click', DV._.bind(this.permalinkAnnotation, this));
