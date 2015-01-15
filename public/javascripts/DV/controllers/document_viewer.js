@@ -135,10 +135,12 @@ DV.load = function(documentRep, options) {
   options = options || {};
   var id  = documentRep.id || documentRep.match(/([^\/]+)(\.js|\.json)$/)[1];
   if ('showSidebar' in options) options.sidebar = options.showSidebar;
+  if ('view_only' in options) options.view_only = options.view_only;
   var defaults = {
     container : document.body,
     zoom      : 'auto',
-    sidebar   : true
+    sidebar   : true,
+    view_only : false
   };
   options            = DV._.extend({}, defaults, options);
   options.fixedSize  = !!(options.width || options.height);
@@ -147,8 +149,12 @@ DV.load = function(documentRep, options) {
   // Once we have the JSON representation in-hand, finish loading the viewer.
   var continueLoad = DV.loadJSON = function(json) {
     var viewer = DV.viewers[json.id];
-    viewer.schema.importCanonicalDocument(json);
+    viewer.schema.importCanonicalDocument(json, options.view_only);
     viewer.loadModels();
+
+    //If view-only, determine page to show
+    if( options.view_only ){ viewer.view_only_page = json.annotations[0].page; }
+
     DV.jQuery(function() {
       viewer.open('InitialLoad');
       if (options.afterLoad) options.afterLoad(viewer);

@@ -29,6 +29,10 @@ DV.model.Document = function(viewer){
   // The zoom level cannot go over the maximum image width.
   var maxZoom = DV._.last(this.ZOOM_RANGES);
   if (this.zoomLevel > maxZoom) this.zoomLevel = maxZoom;
+
+  if( this.viewer.options.view_only ){
+    this.view_only_anno = data.annotationsById[0];
+  }
 };
 
 DV.model.Document.prototype = {

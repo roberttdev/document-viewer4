@@ -32,16 +32,22 @@ DV.Schema.events = {
 
   // Draw the page at the given index.
   drawPageAt : function(pageIds, index) {
-    var first = index == 0;
-    var last  = index == this.models.document.totalPages - 1;
-    if (first) index += 1;
-    var pages = [
-      { label: pageIds[0], index: index - 1 },
-      { label: pageIds[1], index: index },
-      { label: pageIds[2], index: index + 1 }
-    ];
-    if (last) pages.pop();
-    pages[first ? 0 : pages.length - 1].currentPage = true;
+    if( !this.viewer.options.view_only ) {
+      //Standard view
+      var first = index == 0;
+      var last = index == this.models.document.totalPages - 1;
+      if (first) index += 1;
+      var pages = [
+        {label: pageIds[0], index: index - 1},
+        {label: pageIds[1], index: index},
+        {label: pageIds[2], index: index + 1}
+      ];
+      if (last) pages.pop();
+      pages[first ? 0 : pages.length - 1].currentPage = true;
+    }else{
+      //View only (only one page from doc is shown)
+      var pages = [{label: "p0", index: this.viewer.view_only_page - 1}]
+    }
     this.viewer.pageSet.draw(pages);
   },
 

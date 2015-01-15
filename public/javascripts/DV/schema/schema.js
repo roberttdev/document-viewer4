@@ -16,7 +16,7 @@ DV.Schema = function() {
 
 // Imports the document's JSON representation into the DV.Schema form that
 // the models expect.
-DV.Schema.prototype.importCanonicalDocument = function(json) {
+DV.Schema.prototype.importCanonicalDocument = function(json, view_only) {
   // Ensure that IDs start with 1 as the lowest id.
   DV._.uniqueId();
   // Ensure at least empty arrays for sections.
@@ -26,7 +26,7 @@ DV.Schema.prototype.importCanonicalDocument = function(json) {
   this.document               = DV.jQuery.extend(true, {}, json);
   // Everything after this line is for back-compatibility.
   this.data.title             = json.title;
-  this.data.totalPages        = json.pages;
+  this.data.totalPages        = !view_only ? json.pages : 1;
   this.data.totalAnnotations  = json.annotations.length;
   this.data.sections          = json.sections;
   this.data.chapters          = [];

@@ -14,7 +14,7 @@ DV.AnnotationView = function(argHash){
   this.active       = false;
   this.access       = argHash.access;
   this.groupIndex   = 0;
-  this.renderedHTML = $(this.render(this.model.groups[0].group_id));
+  this.renderedHTML = DV.jQuery(this.render(this.model.groups[0].group_id));
   this.remove();
   this.add();
 
@@ -130,7 +130,7 @@ DV.AnnotationView.prototype.remove = function(){
 //groupId: The group to set the display to (optional)
 DV.AnnotationView.prototype.refresh = function(groupId, active) {
   var gid = groupId ? groupId : this.model.groups[0].group_id;
-  this.renderedHTML = $(this.render(gid));
+  this.renderedHTML = DV.jQuery(this.render(gid));
   this.remove();
   this.add();
   if(active != false){ this.show({callbacks: false}); }else{ this.hide(true); }
