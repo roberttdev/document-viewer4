@@ -18,7 +18,7 @@ DV.AnnotationView = function(argHash){
   this.remove();
   this.add();
 
-  $('.DV-annotationTitleInput').autocomplete({source: this.viewer.schema.recommendations});
+  if( this.viewer.schema.recommendations ){ $('.DV-annotationTitleInput').autocomplete({source: this.viewer.schema.recommendations}); }
 
   if(argHash.active){
     this.viewer.helpers.setActiveAnnotationLimits(this);
