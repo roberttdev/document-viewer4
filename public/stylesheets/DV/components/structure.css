@@ -6,7 +6,7 @@
 
 .DV-docViewer-Container{
   position:absolute;
-  top: 38px; bottom: 33px; left: 0px; right: 0px;
+  top: 0px; bottom: 33px; left: 0px; right: 0px;
   margin: 0;
   overflow: hidden;
   border: 1px solid #aaa; border-left: 0; border-right: 0;

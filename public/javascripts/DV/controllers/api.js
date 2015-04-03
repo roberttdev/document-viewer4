@@ -203,6 +203,11 @@ DV.Api.prototype = {
       }
   },
 
+  //Set autocomplete recommendations
+  setRecommendations: function(recArray) {
+    this.viewer.schema.setRecommendations(recArray);
+  },
+
   //Populate any missing annotation IDs with data from client
   //locationIds: hash containing ID and location
   syncAnnotationIDs: function(locationIds) {

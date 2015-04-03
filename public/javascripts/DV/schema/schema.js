@@ -6,6 +6,7 @@ DV.Schema = function() {
   this.events       = {};
   this.elements     = {};
   this.text         = {};
+  this.recommendations = null;
   this.data         = {
     zoomLevel               : 700,
     pageWidthPadding        : 20,
@@ -245,4 +246,9 @@ DV.Schema.prototype.getPreviousAnnotation = function(currentId) {
     returnAnno.groupIndex = returnAnno.groupCount;
     return returnAnno;
   }
+};
+
+
+DV.Schema.prototype.setRecommendations = function(recArray){
+  this.recommendations = recArray;
 };
