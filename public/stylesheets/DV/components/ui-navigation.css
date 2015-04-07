@@ -329,3 +329,28 @@
   margin-top:-5px;
 }
 
+/*--- jQuery UI Dialogs ---*/
+.dv-dialog .ui-dialog-titlebar{
+  display: none;
+}
+
+.dv-dialog.ui-widget-content {
+  border: solid 3px #ffe325;
+}
+
+.dv-dialog .ui-widget-content {
+  border: none;
+  text-align: center;
+}
+
+.dv-dialog .ui-dialog-content {
+  padding: 20px 5px 0px 5px;
+  font: 16px Arial,Helvetica,sans-serif bold;
+}
+
+.dv-dialog button {
+  margin-right: 5px;
+}
+
+
+

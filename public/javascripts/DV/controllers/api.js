@@ -315,17 +315,23 @@ DV.Api.prototype = {
     delete DV.viewers[this.viewer.schema.document.id];
   },
 
-  //Abandon current active annotation (hide or remove)
-  cleanUp: function() {
+  //Request to abandon current active annotation (hide or remove); call success if request succeeds (i.e. not user cancelled)
+  cleanUp: function(success) {
     if(this.viewer.activeAnnotation){
       var anno = this.viewer.activeAnnotation.model;
       if( anno.unsaved == true ){
-        //If unsaved, just remove completely
-        this.viewer.schema.removeAnnotationGroup(anno, anno.groups[0].group_id);
-        this.viewer.pageSet.removePageAnnotation(anno);
+        var _api = this;
+        this.viewer.activeAnnotation.requestHide(true, function(){
+          //If unsaved, just remove completely
+          _api.viewer.schema.removeAnnotationGroup(anno, anno.groups[0].group_id);
+          _api.viewer.pageSet.removePageAnnotation(anno);
+          if(success){ success.call(); }
+        });
       }else {
-        this.viewer.activeAnnotation.hide(true);
+        this.viewer.activeAnnotation.requestHide(true, success);
       }
+    }else{
+      if(success){ success.call(); }
     }
   },
 

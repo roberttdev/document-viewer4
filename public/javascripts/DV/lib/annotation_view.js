@@ -194,6 +194,45 @@ DV.AnnotationView.prototype.show = function(argHash) {
   }
 };
 
+
+//Process a request to hide an annotation; prompt user if necessary; call success if not user-cancelled
+DV.AnnotationView.prototype.requestHide = function(forceOverlayHide, success){
+  _thisView = this;
+
+  //If editing and data has changed, ask for confirmation before hiding
+  var isEditing = this.annotationEl.hasClass('DV-editing');
+  compareTitle = this.model.title == null ? "" : this.model.title;
+  compareText = this.model.text == null ? "" : this.model.text;
+  if( isEditing && (this.annotationEl.find('.DV-annotationTitleInput ').val() != compareTitle || this.annotationEl.find('.DV-annotationTextArea').val() != compareText) ){
+    var _anno_view = this;
+    $('#noSaveDialog').dialog({
+      modal: true,
+      dialogClass: 'dv-dialog',
+      height: 100,
+      buttons: [
+        {
+          text: "OK",
+          click: function() {
+            _anno_view.hide(forceOverlayHide);
+            success.call();
+            $(this).dialog( "close" );
+          }
+        },
+        {
+          text: "Cancel",
+          click: function() {
+            $(this).dialog( "close" );
+          }
+        }
+      ]
+    });
+  }else{
+    this.hide(forceOverlayHide);
+    success.call();
+  }
+};
+
+
 // Hide annotation
 DV.AnnotationView.prototype.hide = function(forceOverlayHide){
   var pageNumber = parseInt(this.viewer.elements.currentPage.text(),10);

@@ -176,7 +176,7 @@ DV._.extend(DV.Schema.helpers, {
     var containerEl = DV.jQuery(this.viewer.options.container);
     var position = containerEl.css('position');
     if (position != 'relative' && position != 'absolute' && !this.viewer.options.fixedSize) {
-      DV.jQuery("html, body").css({overflow : 'hidden'});
+      //DV.jQuery("html, body").css({overflow : 'hidden'});
       // Hide the border, if we're a full-screen viewer in the body tag.
       if (containerEl.offset().top == 0) {
         this.viewer.elements.viewer.css({border: 0});
