@@ -384,7 +384,7 @@
   height: 18px;
   text-align:center;
   float:right;
-  display:inline;
+  display:none;
   color:#666;
   text-decoration:uppercase;
   background-color:#fff;
@@ -394,7 +394,7 @@
     display: none;
   }
   .DV-activeAnnotation .DV-pagination {
-    display: block;
+    display: none;
   }
 
 .DV-pagination .DV-trigger
