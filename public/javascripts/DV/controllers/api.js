@@ -42,17 +42,9 @@ DV.Api.prototype = {
     return parseInt(this.getId(), 10);
   },
 
-  // Return the current zoom factor of the document.
-  currentZoom : function() {
-    var doc = this.viewer.models.document;
-    return doc.zoomLevel / doc.ZOOM_RANGES[1];
-  },
-
   // Return the current zoom factor of the document relative to the base zoom.
   relativeZoom : function() {
-    var models = this.viewer.models;
-    var zoom   = this.currentZoom();
-    return zoom * (models.document.ZOOM_RANGES[1] / models.pages.BASE_WIDTH);
+    return this.viewer.models.pages.zoomFactor();
   },
 
   // Return the total number of pages in the document.
@@ -182,7 +174,6 @@ DV.Api.prototype = {
   addAnnotation : function(anno) {
     anno = this.viewer.schema.loadAnnotation(anno);
     this.viewer.pageSet.addPageAnnotation(anno);
-    //this.viewer.pageSet.currentPage.syncAnnotations();
     this.viewer.pageSet.showAnnotation(anno, {active: true, edit : true});
     return anno;
   },

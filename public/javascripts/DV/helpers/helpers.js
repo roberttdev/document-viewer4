@@ -506,6 +506,7 @@ DV.Schema.helpers = {
         zoom = 1000;
         ranges = this.viewer.models.document.ZOOM_RANGES;
       }
+
       this.viewer.models.document.ZOOM_RANGES = ranges;
       this.viewer.slider.slider({'value': parseInt(DV._.indexOf(ranges, zoom), 10)});
       this.events.zoom(zoom);

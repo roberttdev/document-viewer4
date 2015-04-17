@@ -82,8 +82,6 @@ DV.PageSet.prototype.zoom = function(argHash){
 
   var currentPage  = this.viewer.models.document.currentIndex();
   var oldOffset    = this.viewer.models.document.offsets[currentPage];
-  var oldZoom      = this.viewer.models.document.zoomLevel*1;
-  var relativeZoom = argHash.zoomLevel / oldZoom;
   var scrollPos    = this.viewer.elements.window.scrollTop();
 
   this.viewer.models.document.zoom(argHash.zoomLevel);
@@ -98,19 +96,6 @@ DV.PageSet.prototype.zoom = function(argHash){
   if (this.viewer.state === 'ViewThumbnails') {
     this.viewer.thumbnails.setZoom(argHash.zoomLevel);
     this.viewer.thumbnails.lazyloadThumbnails();
-  }
-
-  // Zoom any drawn redactions.
-  if (this.viewer.state === 'ViewDocument') {
-    this.viewer.$('.DV-annotationRegion.DV-accessRedact').each(function() {
-      var el = DV.jQuery(this);
-      el.css({
-        top    : Math.round(el.position().top  * relativeZoom),
-        left   : Math.round(el.position().left * relativeZoom),
-        width  : Math.round(el.width()         * relativeZoom),
-        height : Math.round(el.height()        * relativeZoom)
-      });
-    });
   }
 
   if(this.viewer.activeAnnotation != null){

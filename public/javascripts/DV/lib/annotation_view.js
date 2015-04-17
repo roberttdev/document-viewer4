@@ -57,9 +57,10 @@ DV.AnnotationView.prototype.render = function(groupId){
     x1                          = Math.round(argHash.x1 * zoom);
     x2                          = Math.round(argHash.x2 * zoom);
     argHash.top                   = y1 - 5;
+
   }
   argHash.owns_note               = argHash.owns_note || false;
-  argHash.width                   = pageModel.width;
+  argHash.width                   = pageModel.width > $('.DV-paper').width() ? ($('.DV-paper').width() - this.LEFT_MARGIN - 5) : pageModel.width;
   argHash.pageNumber              = argHash.page;
   argHash.author                  = argHash.author || "";
   argHash.author_organization     = argHash.author_organization || "";
@@ -182,7 +183,6 @@ DV.AnnotationView.prototype.show = function(argHash) {
   this.viewer.helpers.setActiveAnnotationInNav(this.id);
   this.active                         = true;
   this.pageEl.parent('.DV-set').addClass('DV-activePage');
-  // this.viewer.history.save('document/p'+(parseInt(this.page.index,10)+1)+'/a'+this.id);
 
   if (argHash && argHash.edit) {
     this.showEdit();
