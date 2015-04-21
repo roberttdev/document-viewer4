@@ -1,5 +1,6 @@
 DV.AnnotationView = function(argHash){
-  this.LEFT_MARGIN  = 25;
+  this.LEFT_MARGIN      = 25;
+  this.SCROLLBAR_WIDTH  = 25;
   this.id           = argHash.id;
   this.page         = argHash.page;
   this.viewer       = this.page.set.viewer;
@@ -59,6 +60,8 @@ DV.AnnotationView.prototype.render = function(groupId){
     argHash.top                   = y1 - 5;
 
   }
+
+
   argHash.owns_note               = argHash.owns_note || false;
   argHash.width                   = pageModel.width > $('.DV-paper').width() ? ($('.DV-paper').width() - this.LEFT_MARGIN - 5) : pageModel.width;
   argHash.pageNumber              = argHash.page;
@@ -67,7 +70,7 @@ DV.AnnotationView.prototype.render = function(groupId){
   argHash.bgWidth                 = argHash.width;
   argHash.bWidth                  = argHash.width - 16;
   argHash.excerptWidth            = ((x2 - x1) - 8) > 2 ? ((x2 - x1) - 8) : 2;
-  argHash.excerptMarginLeft       = x1 - 3;
+  argHash.excerptMarginLeft       = x1 - 2;
   argHash.excerptHeight           = y2 - y1;
   argHash.index                   = argHash.page - 1;
   argHash.image                   = pageModel.imageURL(argHash.index);
@@ -82,6 +85,18 @@ DV.AnnotationView.prototype.render = function(groupId){
   argHash.DSOffset                = 3;
   argHash.groupCount              = this.model.groups.length;
   argHash.groupIndex              = this.groupIndex;
+
+  if( pageModel.width > $('.DV-pages').width() ){
+    //If page wider than window, fit anno edit to window
+    argHash.contentMarginLeft = x1 - this.LEFT_MARGIN;
+    argHash.width = argHash.contentMarginLeft + $('.DV-pages').width() - this.SCROLLBAR_WIDTH;
+    argHash.excerptTopMarginLeft = this.LEFT_MARGIN;
+  }else{
+    //Else, fit to page
+    argHash.width = pageModel.width;
+    argHash.contentMarginLeft = 0;
+    argHash.excerptTopMarginLeft = x1;
+  }
 
   if (argHash.access == 'public')         argHash.accessClass = 'DV-accessPublic';
   else if (argHash.access =='exclusive')  argHash.accessClass = 'DV-accessExclusive';
@@ -187,6 +202,11 @@ DV.AnnotationView.prototype.show = function(argHash) {
   if (argHash && argHash.edit) {
     this.showEdit();
   }
+
+  //Scroll into view (horizontally)
+  scrollPos = this.annotationEl.children(".DV-annotationRegion").css('margin-left');
+  scrollPos = scrollPos.substr(0, scrollPos.length - 2);
+  $('.DV-pages').scrollLeft(scrollPos);
 
   //If annotation is a saved one, trigger events on display
   if(!this.viewer.activeAnnotation.model.unsaved && (!argHash || argHash.callbacks != false)) {

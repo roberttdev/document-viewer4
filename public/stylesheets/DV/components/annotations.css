@@ -563,6 +563,7 @@
 
 .DV-editing .DV-editVisible {
   display: inline;
+  width: 98%;
 }
 
 .DV-editing .DV-editHidden {
