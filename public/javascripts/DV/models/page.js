@@ -23,8 +23,8 @@ DV.model.Pages = function(viewer) {
   this.MINI_PADDING    = 18;
 
   this.zoomLevel  = this.viewer.models.document.zoomLevel;
-  this.imageWidth  = this.NORMAL_WIDTH;
-  this.imageHeight = this.NORMAL_HEIGHT;
+  this.imageWidth  = 0;
+  this.imageHeight = 0;
   this.width      = Math.round(this.zoomLevel);
   this.height     = Math.round(this.width * (this.NORMAL_HEIGHT/this.NORMAL_WIDTH));
   this.numPagesLoaded = 0;
@@ -73,7 +73,7 @@ DV.model.Pages.prototype = {
       if (zoomLevel == this.zoomLevel) return;
       this.zoomLevel      = zoomLevel || this.zoomLevel;
       this.width          = Math.round(this.zoomLevel);
-      this.height         = Math.round(this.width * (this.NORMAL_HEIGHT/this.NORMAL_WIDTH));
+      this.height         = Math.round(this.width * (this.imageHeight/this.imageWidth));
     }
 
     this.viewer.elements.sets.width(this.zoomLevel);
@@ -85,6 +85,8 @@ DV.model.Pages.prototype = {
   updateHeight: function(image, pageIndex) {
     this.imageWidth = image.width;
     this.imageHeight = image.height;
+
+    this.height = this.width * (this.imageHeight/this.imageWidth);
 
     this.viewer.models.document.computeOffsets();
     this.viewer.pageSet.simpleReflowPages();
