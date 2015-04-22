@@ -23,7 +23,7 @@
   </div>
 
 
-  <div class="DV-annotationContent" style="margin-left: <%= contentMarginLeft %>px;">
+  <div class="DV-annotationContent" style="margin-left: <%= showWindowMarginLeft %>px;">
 
     <div class="DV-annotationExcerpt" style="height:<%= excerptHeight %>px;">
       <div class="DV-annotationExcerptImageTop" style="height:<%= excerptHeight %>px; width:<%= excerptWidth %>px;left:<%= excerptTopMarginLeft %>px;">
@@ -32,7 +32,7 @@
 
       </div>
       <div class="DV-annotationExcerptImage" style="height:<%= excerptHeight %>px;">
-        <img class="DV-img" src="<%= image %>" style="left:<%= -(contentMarginLeft) %>px; top:-<%= imageTop %>px;" width="<%= imageWidth %>" />
+        <img class="DV-img" src="<%= image %>" style="left:<%= -(showWindowMarginLeft) %>px; top:-<%= imageTop %>px;" width="<%= imageWidth %>" />
       </div>
     </div>
 
@@ -57,7 +57,7 @@
     <div class="DV-annotationBody DV-editHidden">
       <%- text %>
     </div>
-    <textarea class="DV-annotationTextArea DV-editVisible" style="width: <%= bWidth %>px;"><%- text %></textarea>
+    <textarea class="DV-annotationTextArea DV-editVisible"><%- text %></textarea>
 
     <div class="DV-annotationMeta <%= accessClass %>">
       <% if (author) { %>

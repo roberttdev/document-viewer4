@@ -7,6 +7,7 @@ DV.AnnotationView = function(argHash){
   this.model        = this.viewer.schema.getAnnotation(this.id);
   this.position     = { top: argHash.top, left: argHash.left };
   this.dimensions   = { width: argHash.width, height: argHash.height };
+  this.showWindowX  = 0;
   this.pageEl       = argHash.pageEl;
   this.annotationContainerEl = argHash.annotationContainerEl;
   this.annotationEl = null;
@@ -86,17 +87,23 @@ DV.AnnotationView.prototype.render = function(groupId){
   argHash.groupCount              = this.model.groups.length;
   argHash.groupIndex              = this.groupIndex;
 
-  if( pageModel.width > $('.DV-pages').width() ){
+  var windowWidth = $('.DV-pages').width() - this.SCROLLBAR_WIDTH;
+  if( pageModel.width > windowWidth ){
     //If page wider than window, fit anno edit to window
-    argHash.contentMarginLeft = x1 - this.LEFT_MARGIN;
-    argHash.width = argHash.contentMarginLeft + $('.DV-pages').width() - this.SCROLLBAR_WIDTH;
-    argHash.excerptTopMarginLeft = this.LEFT_MARGIN;
+
+    //If larger than total page, back up so that right edge is on right edge of page, otherwise start on left edge of highlight
+    this.showWindowX = (x1+windowWidth) > pageModel.width ? pageModel.width - windowWidth : x1;
+
+    argHash.width = this.showWindowX + windowWidth - this.LEFT_MARGIN;
+
+    argHash.excerptTopMarginLeft = x1 - this.showWindowX;
   }else{
     //Else, fit to page
     argHash.width = pageModel.width;
-    argHash.contentMarginLeft = 0;
+    this.showWindowX = 0;
     argHash.excerptTopMarginLeft = x1;
   }
+  argHash.showWindowMarginLeft = this.showWindowX;
 
   if (argHash.access == 'public')         argHash.accessClass = 'DV-accessPublic';
   else if (argHash.access =='exclusive')  argHash.accessClass = 'DV-accessExclusive';
@@ -109,8 +116,7 @@ DV.AnnotationView.prototype.render = function(groupId){
   if(approvalState == 1){ argHash.approvedClass = ' DV-semi-approved'; }
   if(approvalState == 2){ argHash.approvedClass = ' DV-approved'; }
 
-  var template = (this.type === 'page') ? 'pageAnnotation' : 'annotation';
-  return JST[template](argHash);
+  return JST['annotation'](argHash);
 },
 
 
@@ -204,9 +210,7 @@ DV.AnnotationView.prototype.show = function(argHash) {
   }
 
   //Scroll into view (horizontally)
-  scrollPos = this.annotationEl.children(".DV-annotationRegion").css('margin-left');
-  scrollPos = scrollPos.substr(0, scrollPos.length - 2);
-  $('.DV-pages').scrollLeft(scrollPos);
+  $('.DV-pages').scrollLeft(this.showWindowX);
 
   //If annotation is a saved one, trigger events on display
   if(!this.viewer.activeAnnotation.model.unsaved && (!argHash || argHash.callbacks != false)) {
