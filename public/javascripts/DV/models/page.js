@@ -88,10 +88,6 @@ DV.model.Pages.prototype = {
 
     this.viewer.models.document.computeOffsets();
     this.viewer.pageSet.simpleReflowPages();
-    if (!this.viewer.activeAnnotation && (pageIndex < this.viewer.models.document.currentIndex())) {
-      var diff = Math.round(height * this.zoomFactor() - h);
-      this.viewer.elements.window[0].scrollTop += diff;
-    }
   },
 
   // get the real page height
