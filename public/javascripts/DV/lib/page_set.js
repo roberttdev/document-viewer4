@@ -208,6 +208,7 @@ DV.PageSet.prototype.showAnnotation = function(argHash, showHash){
       }
     }
 
-    this.viewer.helpers.jump(argHash.index,offset);
+    //If not found in page set, jump to
+    this.viewer.helpers.jump((argHash.page - 1),offset);
   }
 };
