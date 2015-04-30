@@ -128,6 +128,16 @@ DV.Schema.prototype.findAnnotation = function(anno) {
   if(anno.id) { annos = _.find(this.data.annotationsById, function (listAnno) { return listAnno.server_id == anno.id; }); }
   //If no ID match, and image data exists, match on highlight image
   if(!annos && anno.location){ annos = _.find(this.data.annotationsById, function (listAnno) { return listAnno.location.image == anno.location.image; }); }
+
+  //If a group was passed, set the selected group index to that group
+  if( anno.group_id ) {
+    for (var i = 0; i < annos.groups.length; i++) {
+      if (annos.groups[i].group_id == anno.group_id) {
+        annos.groupIndex = i+1;
+      }
+    }
+  }
+
   return annos;
 };
 

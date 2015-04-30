@@ -384,18 +384,11 @@
   height: 18px;
   text-align:center;
   float:right;
-  display:none;
   color:#666;
   text-decoration:uppercase;
   background-color:#fff;
   font-family:Arial,Helvetica,sans-serif;
 }
-  .DV-annotation .DV-pagination {
-    display: none;
-  }
-  .DV-activeAnnotation .DV-pagination {
-    display: none;
-  }
 
 .DV-pagination .DV-trigger
 {
@@ -584,9 +577,9 @@
 .DV-isOwner .DV-annotation .DV-accessPrivate,
 .DV-isOwner .DV-annotation .DV-accessExclusive,
 .DV-isOwner .DV-annotation .DV-accessPublic,
-.DV-isReviewer .DV-annotation.DV-ownsAnnotation .DV-accessPrivate,
-.DV-isReviewer .DV-annotation.DV-ownsAnnotation .DV-accessExclusive,
-.DV-isReviewer .DV-annotation.DV-ownsAnnotation .DV-accessPublic {
+.DV-annotation.DV-ownsAnnotation .DV-accessPrivate,
+.DV-annotation.DV-ownsAnnotation .DV-accessExclusive,
+.DV-annotation.DV-ownsAnnotation .DV-accessPublic {
   display: block;
 }
 
