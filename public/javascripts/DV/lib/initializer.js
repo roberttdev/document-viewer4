@@ -10,3 +10,7 @@ _           = DV._; // make sure that _ is defined in the global namespace for n
 DV.viewers  = DV.viewers  || {};
 DV.model    = DV.model    || {};
 
+//External link definitions
+DV.wpd_link = 'http://localhost:1235';
+DV.img_slice_link = '/imagecrop';
+

@@ -44,6 +44,11 @@ DV.Page.prototype.getPageImage = function(){
   return this.el.find('img.DV-pageImage');
 };
 
+// get image URL of current page
+DV.Page.prototype.getPageImageURL = function(){
+  return this.model_pages.imageURL(this.index);
+};
+
 // Get the offset for the page at its current index
 DV.Page.prototype.getOffset = function(){
   return this.model_document.offsets[this.index];
@@ -64,7 +69,7 @@ DV.Page.prototype.draw = function(argHash) {
 
   this.index = (argHash.force === true) ? this.index : argHash.index;
   var _types = [];
-  var source = this.model_pages.imageURL(this.index);
+  var source = this.getPageImageURL();
 
   // Set the page number as a class, for page-dependent elements.
   this.el[0].className = this.el[0].className.replace(/\s*DV-page-\d+/, '') + ' DV-page-' + (this.index + 1);
@@ -241,6 +246,7 @@ DV.Page.prototype.drawImage = function(imageURL) {
 DV.Page.prototype.createPageAnnotation = function(anno, active, edit) {
   return new DV.AnnotationView({
     id: anno.id,
+    anno_type: anno.anno_type,
     page: this,
     pageEl: this.pageEl,
     annotationContainerEl: this.annotationContainerEl,

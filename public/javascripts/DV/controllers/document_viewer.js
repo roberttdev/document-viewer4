@@ -4,6 +4,7 @@ DV.DocumentViewer = function(options) {
   this.$              = this.jQuery;
   this.schema         = new DV.Schema();
   this.api            = new DV.Api(this);
+  this.wpd_api        = new DV.WPD_API();
   this.history        = new DV.History(this);
 
   // Build the data models

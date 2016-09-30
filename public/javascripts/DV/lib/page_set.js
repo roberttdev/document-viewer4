@@ -174,6 +174,8 @@ DV.PageSet.prototype.setActiveAnnotation = function(annotationId, edit){
 DV.PageSet.prototype.showAnnotation = function(argHash, showHash){
   showHash = showHash || {};
 
+  showHash.anno_type = argHash.anno_type;
+
   // if state is ViewAnnotation, jump to the appropriate position in the view
   // else
   // hide active annotations and locate the position of the next annotation

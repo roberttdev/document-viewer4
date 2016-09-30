@@ -595,3 +595,49 @@
   display: block;
 }
 
+.error {
+    border-color: red;
+}
+
+/*----------------Graphs-------------------*/
+ #graph_iframe {
+     height: 800px;
+     width: 100%;
+ }
+
+ .data_status_div {
+     border-color: white;
+     border-width: 1px;
+     border-style: solid;
+     padding: 1px;
+     margin-right: 50px;
+ }
+
+ .data_status_label {
+     float: right;
+     padding-top: 3px;
+ }
+
+ .data_status {
+     padding: 2px;
+     color: white;
+     border-radius: 5px;
+     margin: 0 5px;
+     float: right;
+ }
+
+ .data_error {
+     font-size: 14px;
+     color: red;
+     padding-top: 6px;
+     padding-right: 10px;
+ }
+
+ .status_unsaved {
+     background-color: red;
+ }
+
+ .status_saved {
+     background-color: green;
+ }
+

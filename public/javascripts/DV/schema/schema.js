@@ -45,6 +45,7 @@ DV.Schema.prototype.loadAnnotation = function(anno) {
       var idx = anno.page - 1;
       anno.id = anno.id || parseInt(DV._.uniqueId());
       anno.title = anno.title || '';
+      anno.extension = anno.extension || '';
       anno.text = anno.content || '';
       anno.access = anno.access || 'public';
       anno.type = anno.location && anno.location.image ? 'region' : 'page';
@@ -105,11 +106,16 @@ DV.Schema.prototype.removeAnnotationGroup = function(anno, groupId){
     return false;
   }
   else {
-    var i = anno.page - 1;
-    this.data.annotationsByPage[i] = DV._.without(this.data.annotationsByPage[i], anno);
-    delete this.data.annotationsById[anno.id];
-    return true;
+    this.removeAnnotation(anno);
   }
+};
+
+//Remove graph annotation
+DV.Schema.prototype.removeAnnotation = function(anno){
+  var i = anno.page - 1;
+  this.data.annotationsByPage[i] = DV._.without(this.data.annotationsByPage[i], anno);
+  delete this.data.annotationsById[anno.id];
+  return true;
 };
 
 

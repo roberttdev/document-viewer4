@@ -314,7 +314,11 @@ DV.Api.prototype = {
         var _api = this;
         this.viewer.activeAnnotation.requestHide(true, function(){
           //If unsaved, just remove completely
-          _api.viewer.schema.removeAnnotationGroup(anno, anno.groups[0].group_id);
+          if(anno.anno_type == 'graph'){
+            _api.viewer.schema.removeAnnotation(anno);
+          }else{
+            _api.viewer.schema.removeAnnotationGroup(anno, anno.groups[0].group_id);
+          }
           _api.viewer.pageSet.removePageAnnotation(anno);
           if(success){ success.call(); }
         });

@@ -11,6 +11,7 @@ DV._.extend(DV.Schema.helpers,{
     this.viewer.$('.DV-annotationTitleInput', annoEl).val(anno.title);
     this.viewer.$('.DV-annotationTextArea', annoEl).val(anno.text);
     if (anno.unsaved) {
+      (anno.groupCount > 0) ? this.viewer.schema.removeAnnotationGroup(anno, anno.groups[anno.groupIndex - 1].group_id) : this.viewer.schema.removeAnnotation(anno);
       this.viewer.pageSet.removePageAnnotation(anno);
     } else {
       annoEl.removeClass('DV-editing');
@@ -28,6 +29,12 @@ DV._.extend(DV.Schema.helpers,{
         this.viewer.$('.DV-annotationTitleInput', annoEl).addClass('error');
         this.viewer.$('.DV-errorMsg', annoEl).html(DV.t('no_title_error'));
         return;
+    }
+
+    //For graphs, make sure data was exported
+    if(anno.type == 'graph' && $(annoEl).find('.data_unsaved').length != 0){
+      this.viewer.$('.DV-errorMsg', annoEl).html(DV.t('unsaved_data_error'));
+      return;
     }
 
     anno.text                = this.viewer.$('.DV-annotationTextArea', annoEl).val();
