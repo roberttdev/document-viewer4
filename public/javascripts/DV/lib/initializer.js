@@ -12,5 +12,5 @@ DV.model    = DV.model    || {};
 
 //External link definitions
 DV.wpd_link = 'http://localhost:1235';
-DV.img_slice_link = '/imagecrop';
+DV.img_slice_link = '/api/imagecrop';
 
