@@ -28,6 +28,11 @@ DV.WPD_API.prototype.receiveMessage = function(e) {
       this.current_anno_view.setWPDJSON(JSON.parse(message.data));
       break;
     }
+    case 'dataChange': {
+      //Update annotation to reflect that WPD data has changed
+      this.current_anno_view.updateDataStatus(false);
+      break;
+    }
 
     default: {
       alert('Error: WPD API call not recognized');

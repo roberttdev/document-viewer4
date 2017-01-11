@@ -596,7 +596,7 @@
 }
 
 .error {
-    border-color: red;
+    border-color: red !important;
 }
 
 /*----------------Graphs-------------------*/
@@ -605,7 +605,7 @@
      width: 100%;
  }
 
- .data_status_div {
+ .DV-data_status_div {
      border-color: white;
      border-width: 1px;
      border-style: solid;
@@ -613,12 +613,12 @@
      margin-right: 50px;
  }
 
- .data_status_label {
+ .DV-data_status_label {
      float: right;
      padding-top: 3px;
  }
 
- .data_status {
+ .DV-data_status {
      padding: 2px;
      color: white;
      border-radius: 5px;
@@ -626,7 +626,7 @@
      float: right;
  }
 
- .data_error {
+ .DV-data_error {
      font-size: 14px;
      color: red;
      padding-top: 6px;

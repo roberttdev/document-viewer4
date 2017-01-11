@@ -313,7 +313,7 @@ DV.AnnotationView.prototype.setWPDJSON = function(json){
 
 
 DV.AnnotationView.prototype.updateDataStatus = function(is_saved){
-  var el = this.annotationEl.find('.data_status');
+  var el = this.annotationEl.find('.DV-data_status');
   if(is_saved){
     el.removeClass('status_unsaved');
     el.addClass('status_saved');

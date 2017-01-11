@@ -25,15 +25,19 @@ DV._.extend(DV.Schema.helpers,{
     if (!anno) return;
     anno.title     = this.viewer.$('.DV-annotationTitleInput', annoEl).val();
 
-    if($.trim(anno.title).length==0){
+    //For data points, error if no title
+    if(anno.anno_type != 'graph') {
+      if ($.trim(anno.title).length == 0) {
         this.viewer.$('.DV-annotationTitleInput', annoEl).addClass('error');
         this.viewer.$('.DV-errorMsg', annoEl).html(DV.t('no_title_error'));
         return;
+      }
     }
 
     //For graphs, make sure data was exported
-    if(anno.type == 'graph' && $(annoEl).find('.data_unsaved').length != 0){
-      this.viewer.$('.DV-errorMsg', annoEl).html(DV.t('unsaved_data_error'));
+    if(anno.anno_type == 'graph' && $(annoEl).find('.status_unsaved').length != 0){
+      this.viewer.$('.DV-data_error', annoEl).html(DV.t('unsaved_data_error'));
+      this.viewer.$('.DV-data_status_div', annoEl).addClass('error');
       return;
     }
 
@@ -42,6 +46,7 @@ DV._.extend(DV.Schema.helpers,{
     anno.owns_note           = anno.owns_note;
     anno.author              = anno.author || dc.account.name;
     anno.author_organization = anno.author_organization || (dc.account.isReal && dc.account.organization.name);
+    anno.graph_json          = anno.anno_type == 'graph' ? this.viewer.$('#graph-data', annoEl).val() : null;
 
     if (target.hasClass('DV-saveAnnotationDraft'))  anno.access = 'exclusive';
     else if (annoEl.hasClass('DV-accessExclusive')) anno.access = 'public';
