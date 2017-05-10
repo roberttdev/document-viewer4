@@ -46,7 +46,7 @@ DV._.extend(DV.Schema.helpers,{
     anno.owns_note           = anno.owns_note;
     anno.author              = anno.author || dc.account.name;
     anno.author_organization = anno.author_organization || (dc.account.isReal && dc.account.organization.name);
-    anno.graph_json          = anno.anno_type == 'graph' ? this.viewer.$('#graph-data', annoEl).val() : null;
+    anno.graph_json          = anno.anno_type == 'graph' ? this.viewer.$('.DV-graphData', annoEl).val() : null;
 
     if (target.hasClass('DV-saveAnnotationDraft'))  anno.access = 'exclusive';
     else if (annoEl.hasClass('DV-accessExclusive')) anno.access = 'public';

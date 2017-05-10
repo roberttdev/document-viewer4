@@ -25,7 +25,7 @@ DV.WPD_API.prototype.receiveMessage = function(e) {
     case 'exportJSON': {
       //Receive graph data JSON
       //data: graph data JSON
-      this.current_anno_view.setWPDJSON(JSON.parse(message.data));
+      this.current_anno_view.setWPDJSON(message.data);
       break;
     }
     case 'dataChange': {

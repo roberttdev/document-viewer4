@@ -54,34 +54,25 @@ DV.AnnotationView.prototype.render = function(groupId){
   x1                          = Math.round(argHash.x1 * zoom);
   x2                          = Math.round(argHash.x2 * zoom);
 
-  if( this.model.anno_type == 'graph' ){
-    //Graph specific
-    argHash.top                   = 25;
-    argHash.width                 = $('.DV-paper').width() - 40;
-    argHash.leftMargin            = (pageModel.width - ($('.DV-paper')).width())/2 > 0 ? 0 : (pageModel.width - ($('.DV-paper')).width()) / 2;
-    argHash.showWindowMarginLeft  = 0;
+  argHash.top                   = y1 - 5;
+  argHash.width                 = pageModel.width > $('.DV-paper').width() ? ($('.DV-paper').width() - this.LEFT_MARGIN - 5) : pageModel.width;
+  argHash.leftMargin            = 0;
+
+  //If page wider than window, fit anno edit to window
+  if( pageModel.width > windowWidth ){
+    //If larger than total page, back up so that right edge is on right edge of page, otherwise start on left edge of highlight
+    this.showWindowX = (x1+windowWidth) > pageModel.width ? pageModel.width - windowWidth : x1;
+
+    argHash.width = this.showWindowX + windowWidth - this.LEFT_MARGIN;
+
+    argHash.excerptTopMarginLeft = x1 - this.showWindowX;
   }else{
-    //Regular data point
-    argHash.top                   = y1 - 5;
-    argHash.width                 = pageModel.width > $('.DV-paper').width() ? ($('.DV-paper').width() - this.LEFT_MARGIN - 5) : pageModel.width;
-    argHash.leftMargin            = 0;
-
-    //If page wider than window, fit anno edit to window
-    if( pageModel.width > windowWidth ){
-      //If larger than total page, back up so that right edge is on right edge of page, otherwise start on left edge of highlight
-      this.showWindowX = (x1+windowWidth) > pageModel.width ? pageModel.width - windowWidth : x1;
-
-      argHash.width = this.showWindowX + windowWidth - this.LEFT_MARGIN;
-
-      argHash.excerptTopMarginLeft = x1 - this.showWindowX;
-    }else{
-      //Else, fit to page
-      argHash.width = pageModel.width;
-      this.showWindowX = 0;
-      argHash.excerptTopMarginLeft = x1;
-    }
-    argHash.showWindowMarginLeft = this.showWindowX;
+    //Else, fit to page
+    argHash.width = pageModel.width;
+    this.showWindowX = 0;
+    argHash.excerptTopMarginLeft = x1;
   }
+  argHash.showWindowMarginLeft = this.showWindowX;
 
   argHash.owns_note               = argHash.owns_note || false;
 
@@ -211,7 +202,7 @@ DV.AnnotationView.prototype.show = function(argHash) {
     this.viewer.activeAnnotation.hide();
   }
 
-  if( argHash.anno_type == 'graph' ) {
+  if( this.model.anno_type == 'graph' ) {
     //Graph specific popup
     this.model.image_link == null ? this.processImage() : this.showGraphEditor();
   }else {
@@ -298,7 +289,7 @@ DV.AnnotationView.prototype.showGraphEditor = function(){
   this.viewer.wpd_api.setActiveAnnoView(this);
 
   $(iframe).on('load', function(){
-    var imageMessage = JSON.stringify({name: 'loadImage', src: _thisView.model.image_link });
+    var imageMessage = JSON.stringify({name: 'loadImage', src: _thisView.model.image_link, graph_json: _thisView.model.graph_json });
     _thisView.viewer.wpd_api.sendMessage(imageMessage);
   });
   $(iframe).attr('src', DV.wpd_link);
@@ -306,7 +297,7 @@ DV.AnnotationView.prototype.showGraphEditor = function(){
 
 
 DV.AnnotationView.prototype.setWPDJSON = function(json){
-  this.annotationEl.find('#graph_data').value = json;
+  this.annotationEl.find('.DV-graphData').val(json);
   //Update data status
   this.updateDataStatus(true);
 };
@@ -444,6 +435,12 @@ DV.AnnotationView.prototype.removeConnector = function(force){
 
 // Show edit controls
 DV.AnnotationView.prototype.showEdit = function() {
+    //Graph specific
+   // argHash.top                   = 25;
+    //argHash.width                 = $('.DV-paper').width() - 40;
+    //argHash.leftMargin            = (pageModel.width - ($('.DV-paper')).width())/2 > 0 ? 0 : (pageModel.width - ($('.DV-paper')).width()) / 2;
+    //argHash.showWindowMarginLeft  = 0;
+
   this.annotationEl.addClass('DV-editing');
   this.viewer.$('.DV-annotationTitleInput', this.annotationEl).val() ? this.viewer.$('.DV-annotationTextArea', this.annotationEl).focus() : this.viewer.$('.DV-annotationTitleInput', this.annotationEl).focus() ;
 };

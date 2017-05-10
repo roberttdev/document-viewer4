@@ -6,6 +6,11 @@ DV.Api = function(viewer) {
 // Set up the API class.
 DV.Api.prototype = {
 
+  // Set the link to WPD
+  setWPDLink : function(new_link) {
+      DV.wpd_link = new_link;
+  },
+
   // Return the current page of the document.
   currentPage : function() {
     return this.viewer.models.document.currentPage();
