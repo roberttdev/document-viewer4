@@ -29,25 +29,20 @@
       *************/
     if (anno_type == 'graph') {%>
       <div>
-        <div class="DV-annotationTitle DV-editHidden"><%- title %></div>
-        <input class="DV-annotationTitleInput DV-editVisible" type="text" placeholder="<%= DV.t('graph_name') %>" value="<%- title.replace(/"/g, '&quot;') %>" />
-        <input class="DV-annotationExtension DV-editVisible" type="text" placeholder="<%= DV.t('extension') %>" value="<%- extension.replace(/"/g, '&quot;') %>" />
-        <div class="DV-errorMsg"></div>
+        <input class="DV-graphData" type="hidden"/>
 
-        <input name="graph_data" type="hidden"/>
-
-        <iframe id="graph_iframe"></iframe>
+        <div id="graph_frame"></div>
       </div>
       <div class="DV-annotationMeta <%= accessClass %>">
         <div class="DV-annotationEditControls DV-editVisible">
           <div class="DV-clearfix">
             <div class="minibutton default DV-saveAnnotation float_right"><%= DV.t('save') %></div>
             <div class="minibutton DV-cancelEdit float_right"><%= DV.t('cancel') %></div>
-            <div class="float_right data_status_div">
-              <div class="data_status status_unsaved">Unsaved</div>
-              <div class="data_status_label">Data Status:</div>
+            <div class="float_right DV-data_status_div">
+              <div class="DV-data_status status_unsaved">Unsaved</div>
+              <div class="DV-data_status_label">Data Status:</div>
             </div>
-            <div class="float_right data_error"></div>
+            <div class="float_right DV-data_error"></div>
           </div>
         </div>
       </div>

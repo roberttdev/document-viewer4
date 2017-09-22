@@ -12,13 +12,13 @@ DV._.extend(DV.Schema.helpers, {
     var description = (doc.description) ? doc.description : null;
     var storyURL = doc.resources.related_article;
 
-    var headerHTML  = JST.header({
+    var headerHTML  = JST['DV/views/header']({
       options     : this.viewer.options,
       id          : doc.id,
       story_url   : storyURL,
       title       : doc.title || ''
     });
-    var footerHTML = JST.footer({options : this.viewer.options});
+    var footerHTML = JST['DV/views/footer']({options : this.viewer.options});
 
     var pdfURL = doc.resources.pdf;
     pdfURL = pdfURL && this.viewer.options.pdf !== false ? '<a target="_blank" href="' + pdfURL + '">' + DV.t('original_document_pdf') + ' &raquo;</a>' : '';
@@ -38,7 +38,7 @@ DV._.extend(DV.Schema.helpers, {
       contributors: contribs,
       story_url: storyURL,
       print_notes_url: printNotesURL,
-      descriptionContainer: JST.descriptionContainer({ description: description}),
+      descriptionContainer: JST['DV/views/descriptionContainer']({ description: description}),
       autoZoom: this.viewer.options.zoom == 'auto',
       mini: false
     };
@@ -60,8 +60,8 @@ DV._.extend(DV.Schema.helpers, {
     var container = this.viewer.options.container;
     var containerEl = DV.jQuery(container);
     if (!containerEl.length) throw "Document Viewer container element not found: " + container; // TRANSLATE?
-    if( this.viewer.options.layout == 'vertical' ){ containerEl.html(JST.viewerVertical(viewerOptions)); }
-    else{ containerEl.html(JST.viewerHorizontal(viewerOptions)); }
+    if( this.viewer.options.layout == 'vertical' ){ containerEl.html(JST['DV/views/viewerVertical'](viewerOptions)); }
+    else{ containerEl.html(JST['DV/views/viewerHorizontal'](viewerOptions)); }
   },
 
   // If there is no description, no navigation, and no sections, tighten up
@@ -84,7 +84,7 @@ DV._.extend(DV.Schema.helpers, {
 
   renderNavigation : function() {
     var me = this;
-    var chapterViews = [], bolds = [], expandIcons = [], expanded = [], navigationExpander = JST.navigationExpander({}),nav=[],notes = [],chapters = [];
+    var chapterViews = [], bolds = [], expandIcons = [], expanded = [], navigationExpander = JST['DV/views/navigationExpander']({}),nav=[],notes = [],chapters = [];
     var boldsId = this.viewer.models.boldsId || (this.viewer.models.boldsId = parseInt(DV._.uniqueId()));
 
     /* ---------------------------------------------------- start the nav helper methods */
@@ -103,7 +103,7 @@ DV._.extend(DV.Schema.helpers, {
       var selectionRule = "#DV-selectedChapter-" + chapter.id + " #DV-chapter-" + chapter.id;
 
       bolds.push(selectionRule+" .DV-navChapterTitle");
-      return (JST.chapterNav(chapter));
+      return (JST['DV/views/chapterNav'](chapter));
     };
 
     var createNavAnnotations = function(annotationIndex){
@@ -112,7 +112,7 @@ DV._.extend(DV.Schema.helpers, {
 
       for (var j=0; j<annotations.length; j++) {
         var annotation = annotations[j];
-        renderedAnnotations.push(JST.annotationNav(annotation));
+        renderedAnnotations.push(JST['DV/views/annotationNav'](annotation));
         bolds.push("#DV-selectedAnnotation-" + annotation.id + " #DV-annotationMarker-" + annotation.id + " .DV-navAnnotationTitle");
       }
       return renderedAnnotations.join('');
@@ -220,13 +220,13 @@ DV._.extend(DV.Schema.helpers, {
     this.viewer.api.roundTabCorners();
 
     // Hide the entire sidebar, if there are no annotations or sections.
-    var showChapters = this.models.chapters.chapters.length > 0;
+    //var showChapters = this.models.chapters.chapters.length > 0;
 
     // Remove and re-render the nav controls.
     // Don't show the nav controls if there's no sidebar, and it's a one-page doc.
     this.viewer.$('.DV-navControls').remove();
     if (showPages || this.viewer.options.sidebar) {
-      var navControls = JST.navControls({
+      var navControls = JST['DV/views/navControls']({
         totalPages: this.viewer.schema.data.totalPages,
         totalAnnotations: this.viewer.schema.data.totalAnnotations
       });
@@ -234,7 +234,7 @@ DV._.extend(DV.Schema.helpers, {
     }
     this.viewer.$('.DV-fullscreenControl').remove();
     if (this.viewer.schema.document.canonicalURL) {
-      var fullscreenControl = JST.fullscreenControl({});
+      var fullscreenControl = JST['DV/views/fullscreenControl']({});
       if (noFooter) {
         this.viewer.$('.DV-collapsibleControls').prepend(fullscreenControl);
         this.elements.viewer.addClass('DV-hideFooter');

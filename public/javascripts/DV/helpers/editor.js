@@ -5,6 +5,8 @@ DV._.extend(DV.Schema.helpers,{
     annoEl.addClass('DV-editing');
     area.focus();
   },
+
+
   cancelAnnotationEdit : function(e) {
     var annoEl = this.viewer.$(e.target).closest(this.annotationClassName);
     var anno   = this.getAnnotationModel(annoEl);
@@ -18,33 +20,51 @@ DV._.extend(DV.Schema.helpers,{
     }
     this.viewer.fireCancelCallbacks(anno);
   },
+
+
   saveAnnotation : function(e, option) {
     var target = this.viewer.$(e.target);
     var annoEl = target.closest(this.annotationClassName);
     var anno   = this.getAnnotationModel(annoEl);
     if (!anno) return;
-    anno.title     = this.viewer.$('.DV-annotationTitleInput', annoEl).val();
 
-    if($.trim(anno.title).length==0){
-        this.viewer.$('.DV-annotationTitleInput', annoEl).addClass('error');
-        this.viewer.$('.DV-errorMsg', annoEl).html(DV.t('no_title_error'));
-        return;
-    }
+    if (target.hasClass('DV-saveAnnotationDraft'))  anno.access = 'exclusive';
+    else if (annoEl.hasClass('DV-accessExclusive')) anno.access = 'public';
 
-    //For graphs, make sure data was exported
-    if(anno.type == 'graph' && $(annoEl).find('.data_unsaved').length != 0){
-      this.viewer.$('.DV-errorMsg', annoEl).html(DV.t('unsaved_data_error'));
-      return;
-    }
-
-    anno.text                = this.viewer.$('.DV-annotationTextArea', annoEl).val();
     anno.unsaved             = false;
     anno.owns_note           = anno.owns_note;
     anno.author              = anno.author || dc.account.name;
     anno.author_organization = anno.author_organization || (dc.account.isReal && dc.account.organization.name);
 
-    if (target.hasClass('DV-saveAnnotationDraft'))  anno.access = 'exclusive';
-    else if (annoEl.hasClass('DV-accessExclusive')) anno.access = 'public';
+    anno.anno_type == 'graph' ? this.saveGraph(anno, annoEl, option) : this.saveDataPoint(anno, annoEl, option)
+  },
+
+
+  saveGraph : function(anno, annoEl, option){
+    //For graphs, make sure data was exported
+    if($(annoEl).find('.status_unsaved').length != 0){
+        this.viewer.$('.DV-data_error', annoEl).html(DV.t('unsaved_data_error'));
+        this.viewer.$('.DV-data_status_div', annoEl).addClass('error');
+        return;
+    }
+
+    anno.graph_json          = anno.anno_type == 'graph' ? this.viewer.$('.DV-graphData', annoEl).val() : null;
+
+    annoEl.removeClass('DV-editing');
+    this.viewer.fireSaveCallbacks(anno);
+  },
+
+
+  saveDataPoint : function(anno, annoEl, option){
+    anno.title = this.viewer.$('.DV-annotationTitleInput', annoEl).val();
+
+    if ($.trim(anno.title).length == 0) {
+        this.viewer.$('.DV-annotationTitleInput', annoEl).addClass('error');
+        this.viewer.$('.DV-errorMsg', annoEl).html(DV.t('no_title_error'));
+        return;
+    }
+
+    anno.text = this.viewer.$('.DV-annotationTextArea', annoEl).val();
 
     annoEl.removeClass('DV-editing');
     this.viewer.fireSaveCallbacks(anno);

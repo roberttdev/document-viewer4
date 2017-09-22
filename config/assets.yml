@@ -1,7 +1,7 @@
 javascript_compressor: closure
 embed_images: datauri
 template_function: DV._.template
-# compress_assets: off
+compress_assets: false
 
 javascripts:
   viewer:
@@ -27,6 +27,10 @@ javascripts:
 
   templates:
     - public/javascripts/DV/views/*.jst
+    - public/javascripts/WPD/wpd.jst
+
+  wpd:
+    - public/javascripts/WPD/combined-compiled.js
 
 stylesheets:
   viewer:

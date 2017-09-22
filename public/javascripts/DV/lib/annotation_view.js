@@ -54,34 +54,25 @@ DV.AnnotationView.prototype.render = function(groupId){
   x1                          = Math.round(argHash.x1 * zoom);
   x2                          = Math.round(argHash.x2 * zoom);
 
-  if( this.model.anno_type == 'graph' ){
-    //Graph specific
-    argHash.top                   = 25;
-    argHash.width                 = $('.DV-paper').width() - 40;
-    argHash.leftMargin            = (pageModel.width - ($('.DV-paper')).width())/2 > 0 ? 0 : (pageModel.width - ($('.DV-paper')).width()) / 2;
-    argHash.showWindowMarginLeft  = 0;
+  argHash.top                   = y1 - 5;
+  argHash.width                 = pageModel.width > $('.DV-paper').width() ? ($('.DV-paper').width() - this.LEFT_MARGIN - 5) : pageModel.width;
+  argHash.leftMargin            = 0;
+
+  //If page wider than window, fit anno edit to window
+  if( pageModel.width > windowWidth ){
+    //If larger than total page, back up so that right edge is on right edge of page, otherwise start on left edge of highlight
+    this.showWindowX = (x1+windowWidth) > pageModel.width ? pageModel.width - windowWidth : x1;
+
+    argHash.width = this.showWindowX + windowWidth - this.LEFT_MARGIN;
+
+    argHash.excerptTopMarginLeft = x1 - this.showWindowX;
   }else{
-    //Regular data point
-    argHash.top                   = y1 - 5;
-    argHash.width                 = pageModel.width > $('.DV-paper').width() ? ($('.DV-paper').width() - this.LEFT_MARGIN - 5) : pageModel.width;
-    argHash.leftMargin            = 0;
-
-    //If page wider than window, fit anno edit to window
-    if( pageModel.width > windowWidth ){
-      //If larger than total page, back up so that right edge is on right edge of page, otherwise start on left edge of highlight
-      this.showWindowX = (x1+windowWidth) > pageModel.width ? pageModel.width - windowWidth : x1;
-
-      argHash.width = this.showWindowX + windowWidth - this.LEFT_MARGIN;
-
-      argHash.excerptTopMarginLeft = x1 - this.showWindowX;
-    }else{
-      //Else, fit to page
-      argHash.width = pageModel.width;
-      this.showWindowX = 0;
-      argHash.excerptTopMarginLeft = x1;
-    }
-    argHash.showWindowMarginLeft = this.showWindowX;
+    //Else, fit to page
+    argHash.width = pageModel.width;
+    this.showWindowX = 0;
+    argHash.excerptTopMarginLeft = x1;
   }
+  argHash.showWindowMarginLeft = this.showWindowX;
 
   argHash.owns_note               = argHash.owns_note || false;
 
@@ -110,6 +101,10 @@ DV.AnnotationView.prototype.render = function(groupId){
     argHash.author_organization     = argHash.author_organization || "";
     argHash.image                   = pageModel.imageURL(argHash.index);
     argHash.imageTop                = y1 + 1;
+  }else{
+    //Graphs only have the one group currently
+    argHash.groupCount = 1;
+    argHash.groupIndex = 1;
   }
 
   if (argHash.access == 'public')         argHash.accessClass = 'DV-accessPublic';
@@ -123,7 +118,7 @@ DV.AnnotationView.prototype.render = function(groupId){
   if(approvalState == 1){ argHash.approvedClass = ' DV-semi-approved'; }
   if(approvalState == 2){ argHash.approvedClass = ' DV-approved'; }
 
-  return JST['annotation'](argHash);
+  return JST['DV/views/annotation'](argHash);
 },
 
 
@@ -211,7 +206,7 @@ DV.AnnotationView.prototype.show = function(argHash) {
     this.viewer.activeAnnotation.hide();
   }
 
-  if( argHash.anno_type == 'graph' ) {
+  if( this.model.anno_type == 'graph' ) {
     //Graph specific popup
     this.model.image_link == null ? this.processImage() : this.showGraphEditor();
   }else {
@@ -252,7 +247,7 @@ DV.AnnotationView.prototype.show = function(argHash) {
 //Provide loading message and generate cropped image based on annotation selection
 DV.AnnotationView.prototype.processImage = function(){
   var _thisView = this;
-  this.annotationEl.find('#graph_iframe').html(JST['generatingImage']);
+  this.annotationEl.find('#graph_frame').html(JST['DV/views/generatingImage']);
 
   //Convert anno parameters to ratios for image crop
   var pageModel               = this.viewer.models.pages;
@@ -286,34 +281,48 @@ DV.AnnotationView.prototype.processImage = function(){
 };
 
 
-DV.AnnotationView.prototype.getIframe = function(){
-  return this.annotationEl.find('#graph_iframe')[0];
-}
-
-
 //Show WPD
 DV.AnnotationView.prototype.showGraphEditor = function(){
-  var _thisView = this;
-  var iframe = this.getIframe();
+  var _thisAnnoView = this;
+  var iframe = this.annotationEl.find('#graph_frame')[0];
   this.viewer.wpd_api.setActiveAnnoView(this);
 
-  $(iframe).on('load', function(){
-    var imageMessage = JSON.stringify({name: 'loadImage', src: _thisView.model.image_link });
-    _thisView.viewer.wpd_api.sendMessage(imageMessage);
+  //Grab height of image being sent to WPD, use it to set height of anno window
+  var _width, _height;
+  $("<img/>").attr("src", _thisAnnoView.model.image_link).load(function() {
+    var frame_height = this.height > 475 ? this.height : 475;
+    $(iframe).height(frame_height);
+
+      if( !DV.WPD_loaded ){
+          //If WPD JS isn't loaded, load and initialize
+          var script = document.createElement('script');
+          script.src = '/viewer/WPD/combined-compiled.js';
+          script.onload = _thisAnnoView.initWPD.bind(_thisAnnoView);
+          document.body.appendChild(script);
+          DV.WPD_loaded = true;
+      }else{
+          _thisAnnoView.initWPD();
+      }
+
+      $(iframe).html(JST['WPD/wpd']);
   });
-  $(iframe).attr('src', DV.wpd_link);
 };
 
+DV.AnnotationView.prototype.initWPD = function(){
+    var graph_json =  this.model.graph_json ? JSON.parse(this.model.graph_json) : null;
+    wpd.iframe_api.setParentMsgFunction(this.viewer.wpd_api.receiveMessage.bind(this.viewer.wpd_api));
+    wpd.initApp(true, this.model.image_link, graph_json);
+};
 
 DV.AnnotationView.prototype.setWPDJSON = function(json){
-  this.annotationEl.find('#graph_data').value = json;
+  this.annotationEl.find('.DV-graphData').val(json);
   //Update data status
   this.updateDataStatus(true);
 };
 
 
 DV.AnnotationView.prototype.updateDataStatus = function(is_saved){
-  var el = this.annotationEl.find('.data_status');
+  var el = this.annotationEl.find('.DV-data_status');
   if(is_saved){
     el.removeClass('status_unsaved');
     el.addClass('status_saved');
@@ -444,6 +453,12 @@ DV.AnnotationView.prototype.removeConnector = function(force){
 
 // Show edit controls
 DV.AnnotationView.prototype.showEdit = function() {
+    //Graph specific
+   // argHash.top                   = 25;
+    //argHash.width                 = $('.DV-paper').width() - 40;
+    //argHash.leftMargin            = (pageModel.width - ($('.DV-paper')).width())/2 > 0 ? 0 : (pageModel.width - ($('.DV-paper')).width()) / 2;
+    //argHash.showWindowMarginLeft  = 0;
+
   this.annotationEl.addClass('DV-editing');
   this.viewer.$('.DV-annotationTitleInput', this.annotationEl).val() ? this.viewer.$('.DV-annotationTextArea', this.annotationEl).focus() : this.viewer.$('.DV-annotationTitleInput', this.annotationEl).focus() ;
 };

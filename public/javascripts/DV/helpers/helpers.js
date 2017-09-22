@@ -392,7 +392,7 @@ DV.Schema.helpers = {
 
       var height = this.models.pages.height;
       for (var i = 0; i < totalPagesToCreate; i++) {
-        pages.push(JST.pages({ pageNumber: i+1, pageIndex: i , pageImageSource: null, baseHeight: height }));
+        pages.push(JST['DV/views/pages']({ pageNumber: i+1, pageIndex: i , pageImageSource: null, baseHeight: height }));
       }
 
       return pages.join('');
@@ -408,7 +408,7 @@ DV.Schema.helpers = {
     unsupportedBrowser : function() {
       var browser = DV.jQuery.browser;
       if (!(browser.msie && parseFloat(browser.version, 10) <= 6.0)) return false;
-      DV.jQuery(this.viewer.options.container).html(JST.unsupported({viewer : this.viewer}));
+      DV.jQuery(this.viewer.options.container).html(JST['DV/views/unsupported']({viewer : this.viewer}));
       return true;
     },
 

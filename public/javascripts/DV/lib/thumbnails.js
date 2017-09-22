@@ -32,7 +32,7 @@ DV.Thumbnails.prototype.render = function() {
 
 DV.Thumbnails.prototype.buildThumbnails = function(startPage, endPage) {
   if (startPage == 1) this.el.empty();
-  var thumbnailsHTML = JST.thumbnails({
+  var thumbnailsHTML = JST['DV/views/thumbnails']({
     page      : startPage,
     endPage   : endPage,
     zoom      : this.zoomLevel,

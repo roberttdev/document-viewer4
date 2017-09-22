@@ -86,7 +86,7 @@ DV.Api.prototype = {
   setDescription : function(desc) {
     this.viewer.schema.document.description = desc;
     this.viewer.$('.DV-description').remove();
-    this.viewer.$('.DV-navigation').prepend(JST.descriptionContainer({description: desc}));
+    this.viewer.$('.DV-navigation').prepend(JST['DV/views/descriptionContainer']({description: desc}));
     this.viewer.helpers.displayNavigation();
   },
 
