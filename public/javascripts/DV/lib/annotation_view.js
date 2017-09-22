@@ -287,6 +287,7 @@ DV.AnnotationView.prototype.showGraphEditor = function(){
   var iframe = this.annotationEl.find('#graph_frame')[0];
   this.viewer.wpd_api.setActiveAnnoView(this);
 
+<<<<<<< HEAD
   //Grab height of image being sent to WPD, use it to set height of anno window
   var _width, _height;
   $("<img/>").attr("src", _thisAnnoView.model.image_link).load(function() {
@@ -305,6 +306,11 @@ DV.AnnotationView.prototype.showGraphEditor = function(){
       }
 
       $(iframe).html(JST['WPD/wpd']);
+=======
+  $(iframe).on('load', function(){
+    var imageMessage = JSON.stringify({name: 'loadImage', src: _thisView.model.image_link, graph_json: _thisView.model.graph_json });
+    _thisView.viewer.wpd_api.sendMessage(imageMessage);
+>>>>>>> bd6073be497c0b415c41893eec57203a3ca4814d
   });
 };
 

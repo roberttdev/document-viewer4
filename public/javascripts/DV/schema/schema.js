@@ -68,6 +68,7 @@ DV.Schema.prototype.loadAnnotation = function(anno) {
       var insertionIndex = DV._.sortedIndex(page, anno, function (a) {
           return a.y1;
       });
+
       page.splice(insertionIndex, 0, anno);
   }
   return anno;
