@@ -12,10 +12,11 @@ DV.model    = DV.model    || {};
 
 //External link definitions
 <<<<<<< HEAD
-DV.wpd_link = 'http://localhost:1235';
-DV.img_slice_link = '/api/imagecrop';
-=======
+<<<<<<< HEAD
 DV.wpd_link = 'http://local.documentcloud.org:1235';
-DV.img_slice_link = '/imagecrop';
->>>>>>> 8e6d2ce59fc76b44e52dfe89661cd7ea2a25897d
+=======
+>>>>>>> bd6073be497c0b415c41893eec57203a3ca4814d
+=======
+>>>>>>> bd6073be497c0b415c41893eec57203a3ca4814d
+DV.img_slice_link = '/api/imagecrop';
 

@@ -11,9 +11,5 @@ DV.viewers  = DV.viewers  || {};
 DV.model    = DV.model    || {};
 
 //External link definitions
-<<<<<<< HEAD
-DV.wpd_link = 'http://local.documentcloud.org:1235';
-=======
->>>>>>> bd6073be497c0b415c41893eec57203a3ca4814d
 DV.img_slice_link = '/api/imagecrop';
 
