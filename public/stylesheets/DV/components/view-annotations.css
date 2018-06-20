@@ -1,48 +1,48 @@
-.DV-viewAnnotations .DV-set,
-.DV-viewAnnotations .DV-text,
-.DV-viewAnnotations .DV-search,
-.DV-viewAnnotations .DV-bar{
+.DV-ViewHighlights .DV-set,
+.DV-ViewHighlights .DV-text,
+.DV-ViewHighlights .DV-search,
+.DV-ViewHighlights .DV-bar{
   display:none;
 }
 
-.DV-viewAnnotations .DV-allAnnotations,
-.DV-viewAnnotations .DV-annotationContent{
+.DV-ViewHighlights .DV-allHighlights,
+.DV-ViewHighlights .DV-highlightContent{
   display:block;
 }
 
-.DV-viewAnnotations .DV-annotationRegion{
+.DV-ViewHighlights .DV-highlightRegion{
   position: absolute;
   left: -10000px;
   width: 0; height: 0;
 }
 
-.DV-viewAnnotations .DV-annotationTab{
+.DV-ViewHighlights .DV-highlightTab{
 
   filter:none;
   display:none !important;
 }
 
-.DV-viewAnnotations .DV-annotationGoto{
+.DV-ViewHighlights .DV-annotationGoto{
   display:inline;
 }
 
-.DV-viewAnnotations .DV-pageNoteAnnotationTab{
+.DV-ViewHighlights .DV-pageNoteHighlightTab{
   display:none;
 }
 
-.DV-viewAnnotations .DV-annotationNext,
-.DV-viewAnnotations .DV-annotationPrevious{
+.DV-ViewHighlights .DV-highlightNext,
+.DV-ViewHighlights .DV-highlightPrevious{
   display:none !important;
 }
 
-.DV-viewAnnotations .DV-annotationBG{
+.DV-ViewHighlights .DV-highlightBG{
   margin-top:0;
   position:relative;
   clear:left;
 }
 
-.DV-viewAnnotations .DV-annotation,
-.DV-getHeights .DV-annotation {
+.DV-ViewHighlights .DV-highlight,
+.DV-getHeights .DV-highlight {
   position:relative;
   top:0 !important;
   display: inline-block;
@@ -63,13 +63,13 @@
   box-shadow: 1px 1px 3px rgb(0,0,0);
   box-shadow: 1px 1px 3px rgba(0,0,0,.2);
 }
-.DV-viewAnnotations .DV-annotation.DV-accessPrivate {
+.DV-ViewHighlights .DV-highlight.DV-accessPrivate {
   background: rgb(107, 194, 248);
   background: rgba(107, 194, 248, .9);
 }
 
 /*hack to control scrollbar width in webkit*/
-.DV-viewAnnotations .DV-annotation:after {
+.DV-ViewHighlights .DV-highlight:after {
     content: ".";
     display: block;
     height: 0;
@@ -78,32 +78,32 @@
 }
 
 /* Hides from IE-mac \*/
-* html .DV-viewAnnotations .DV-annotation {height: 1%;}
-.DV-viewAnnotations .DV-annotation {display: block;}
+* html .DV-ViewHighlights .DV-highlight {height: 1%;}
+.DV-ViewHighlights .DV-highlight {display: block;}
 /* End hide from IE-mac */
 
-.DV-viewAnnotations .DV-currentPagePrefix,
-.DV-viewAnnotations .DV-totalPages{
+.DV-ViewHighlights .DV-currentPagePrefix,
+.DV-ViewHighlights .DV-totalPages{
   display:none;
 }
 
-.DV-viewAnnotations .DV-currentAnnotationPrefix,
-.DV-viewAnnotations .DV-totalAnnotations{
+.DV-ViewHighlights .DV-currentHighlightPrefix,
+.DV-ViewHighlights .DV-totalHighlights{
   display:inline;
 }
 
 
-.DV-ie .DV-viewAnnotations .DV-annotationLabel {
+.DV-ie .DV-ViewHighlights .DV-highlightLabel {
   float:none;
   left:0;
   position:absolute;
   top:7px;
 }
 
-.DV-viewAnnotations .DV-noChildren{
+.DV-ViewHighlights .DV-noChildren{
   display:none !important;
 }
 
-.DV-viewAnnotations .DV-hasChildren{
+.DV-ViewHighlights .DV-hasChildren{
   display:block !important;
 }

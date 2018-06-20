@@ -2,7 +2,7 @@
   cursor: text;
 }
 
-.DV-viewSearch .DV-allAnnotations,
+.DV-viewSearch .DV-allHighlights,
 .DV-viewSearch .DV-bar{
   display:none;
 }
@@ -12,8 +12,8 @@
   display:block;
 }
 
-.DV-viewSearch .DV-totalAnnotations,
-.DV-viewSearch .DV-currentAnnotationPrefix{
+.DV-viewSearch .DV-totalHighlights,
+.DV-viewSearch .DV-currentHighlightPrefix{
   display:none;
 }
 
@@ -27,7 +27,7 @@
 
 .DV-viewSearch .DV-sidebar .DV-well .DV-chaptersContainer div.DV-hasChildren div,
 .DV-viewSearch .DV-sidebar .DV-well .DV-chaptersContainer span.DV-expander,
-.DV-viewSearch .DV-annotationMarker{
+.DV-viewSearch .DV-highlightMarker{
   display:none !important;
 }
 
@@ -39,7 +39,7 @@
   margin-left:-1px;
 }
 
-.DV-viewSearch .DV-annotationMarker,
+.DV-viewSearch .DV-highlightMarker,
 .DV-viewSearch .DV-chapter{
   margin-left:14px;
 }

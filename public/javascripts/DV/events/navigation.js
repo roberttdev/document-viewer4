@@ -2,7 +2,7 @@ DV._.extend(DV.Schema.events, {
   handleNavigation: function(e){
     var el          = this.viewer.$(e.target);
     var triggerEl   = el.closest('.DV-trigger');
-    var noteEl      = el.closest('.DV-annotationMarker');
+    var noteEl      = el.closest('.DV-highlightMarker');
     var chapterEl   = el.closest('.DV-chapter');
     if (!triggerEl.length) return;
 
@@ -10,19 +10,19 @@ DV._.extend(DV.Schema.events, {
       return chapterEl.toggleClass('DV-collapsed');
 
     }else if (noteEl.length) {
-      var aid         = noteEl[0].id.replace('DV-annotationMarker-','');
-      var annotation  = this.viewer.schema.getAnnotation(aid);
-      var pageNumber  = parseInt(annotation.index,10)+1;
+      var aid         = noteEl[0].id.replace('DV-highlightMarker-','');
+      var highlight  = this.viewer.schema.getHighlight(aid);
+      var pageNumber  = parseInt(highlight.index,10)+1;
 
       if(this.viewer.state === 'ViewText'){
-        this.loadText(annotation.index);
+        this.loadText(highlight.index);
 
         // this.viewer.history.save('text/p'+pageNumber);
       }else{
         if (this.viewer.state === 'ViewThumbnails') {
           this.viewer.open('ViewDocument');
         }
-        this.viewer.pageSet.showAnnotation(annotation);
+        this.viewer.pageSet.showHighlight(highlight);
       }
 
     } else if (chapterEl.length) {

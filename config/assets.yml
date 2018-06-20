@@ -5,8 +5,8 @@ compress_assets: false
 
 javascripts:
   viewer:
-    - public/javascripts/DV/vendor/jquery-1.5.1.js
-    - public/javascripts/DV/vendor/jquery-ui-1.8.1.custom.min.js
+    - public/javascripts/DV/vendor/jquery-1.8.3.js
+    - public/javascripts/DV/vendor/jquery-ui-1.9.2.custom.min.js
     - public/javascripts/DV/vendor/underscore.js
     - public/javascripts/DV/vendor/sprintf.js
     - public/javascripts/DV/vendor/jquery.acceptInput.js

@@ -108,7 +108,7 @@
 
 .DV-currentPagePrefix,
 .DV-currentPageSuffix,
-.DV-currentAnnotationPrefix{
+.DV-currentHighlightPrefix{
   font-family:Arial,Helvetica,sans-serif;
   font-size:12px;
   color:#333;
@@ -116,7 +116,7 @@
 
 .DV-ie .DV-currentPagePrefix,
 .DV-ie .DV-currentPageSuffix,
-.DV-ie .DV-currentAnnotationPrefix{
+.DV-ie .DV-currentHighlightPrefix{
   vertical-align:top;
 }
 
@@ -166,34 +166,34 @@
 }
 
 .DV-chapter,
-.DV-annotationMarker {
+.DV-highlightMarker {
   margin: 0 0 12px 0;
   padding: 0;
   font-family: Arial,Helvetica,sans-serif;
   font-size: 12px;
   font-weight: bold;
 }
-  .DV-collapsed .DV-annotationMarker {
+  .DV-collapsed .DV-highlightMarker {
     display: none;
   }
 
-.DV-annotationMarker{
+.DV-highlightMarker{
   margin-left: 14px;
 }
 
-.DV-annotationMarker .DV-navPageNumber {
+.DV-highlightMarker .DV-navPageNumber {
   visibility: hidden;
 }
 
-.DV-annotationMarker .DV-trigger:hover .DV-navPageNumber {
+.DV-highlightMarker .DV-trigger:hover .DV-navPageNumber {
   visibility:visible;
 }
 
-.DV-chapter .DV-annotationMarker{
+.DV-chapter .DV-highlightMarker{
   margin-left: 14px;
 }
 
-.DV-hasChildren .DV-annotationMarker{
+.DV-hasChildren .DV-highlightMarker{
   margin:0 0 4px;
   padding:0 0 0 8px;
   background: transparent url(../../../images/DV/embed/bullet4x4.gif) no-repeat 0 4px;
@@ -203,7 +203,7 @@
   margin-left:12px;
 }
 
-.DV-ie .DV-annotationMarker{
+.DV-ie .DV-highlightMarker{
   margin-bottom:3px;
 }
 
@@ -270,7 +270,7 @@
   outline:0;
 }
 
-.DV-navigation .DV-trigger:hover .DV-navAnnotationTitle {
+.DV-navigation .DV-trigger:hover .DV-navHighlightTitle {
   text-decoration:underline;
 }
 

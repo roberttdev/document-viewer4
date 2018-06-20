@@ -1,4 +1,4 @@
-.DV-viewThumbnails .DV-allAnnotations,
+.DV-viewThumbnails .DV-allHighlights,
 .DV-viewThumbnails .DV-text,
 .DV-viewThumbnails .DV-search,
 .DV-viewThumbnails .DV-pageCollection,
@@ -8,8 +8,8 @@
   display:none;
 }
 
-.DV-viewThumbnails .DV-currentAnnotationPrefix,
-.DV-viewThumbnails .DV-totalAnnotations{
+.DV-viewThumbnails .DV-currentHighlightPrefix,
+.DV-viewThumbnails .DV-totalHighlights{
   display:none;
 }
 

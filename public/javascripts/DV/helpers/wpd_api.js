@@ -5,7 +5,6 @@
 
 DV.WPD_API = function(){
   this.current_anno_view = null;
-  window.addEventListener('message', $.proxy(this.receiveMessage, this));
 };
 
 DV.WPD_API.prototype.setActiveAnnoView = function(currentView){
@@ -26,7 +25,7 @@ DV.WPD_API.prototype.receiveMessage = function(message) {
       break;
     }
     case 'dataChange': {
-      //Update annotation to reflect that WPD data has changed
+      //Update highlight to reflect that WPD data has changed
       this.current_anno_view.updateDataStatus(false);
       break;
     }

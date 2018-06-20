@@ -105,40 +105,40 @@ DV.Schema.events = {
   },
 
   resetTracker: function(){
-    this.viewer.activeAnnotation = null;
-    this.trackAnnotation.combined     = null;
-    this.trackAnnotation.h            = null;
+    this.viewer.activeHighlight = null;
+    this.trackHighlight.combined     = null;
+    this.trackHighlight.h            = null;
   },
-  trackAnnotation: function(){
+  trackHighlight: function(){
     var viewer          = this.viewer;
     var helpers         = this.helpers;
     var scrollPosition  = this.elements.window[0].scrollTop;
 
-    if(viewer.activeAnnotation){
-      var annotation      = viewer.activeAnnotation;
-      var trackAnnotation = this.trackAnnotation;
+    if(viewer.activeHighlight){
+      var highlightView  = viewer.activeHighlight;
+      var trackHighlight = this.trackHighlight;
 
 
-      if(trackAnnotation.id != annotation.id){
-        trackAnnotation.id = annotation.id;
-        helpers.setActiveAnnotationLimits(annotation);
+      if(trackHighlight.id != highlightView.model.id){
+        trackHighlight.id = highlightView.model.id;
+        helpers.setActiveHighlightLimits(highlightView);
       }
-      if(!viewer.activeAnnotation.annotationEl.hasClass('DV-editing') &&
-         (scrollPosition > (trackAnnotation.h) || scrollPosition < trackAnnotation.combined)) {
-        annotation.hide(true);
-        viewer.pageSet.setActiveAnnotation(null);
-        viewer.activeAnnotation   = null;
-        trackAnnotation.h         = null;
-        trackAnnotation.id        = null;
-        trackAnnotation.combined  = null;
+      if(!viewer.activeHighlight.highlightEl.hasClass('DV-editing') &&
+         (scrollPosition > (trackHighlight.h) || scrollPosition < trackHighlight.combined)) {
+        highlightView.hide(true);
+        viewer.pageSet.setActiveHighlight(null);
+        viewer.activeHighlight   = null;
+        trackHighlight.h         = null;
+        trackHighlight.id        = null;
+        trackHighlight.combined  = null;
       }
     }else{
-      viewer.pageSet.setActiveAnnotation(null);
-      viewer.activeAnnotation   = null;
-      trackAnnotation.h         = null;
-      trackAnnotation.id        = null;
-      trackAnnotation.combined  = null;
-      helpers.removeObserver('trackAnnotation');
+      viewer.pageSet.setActiveHighlight(null);
+      viewer.activeHighlight   = null;
+      trackHighlight.h         = null;
+      trackHighlight.id        = null;
+      trackHighlight.combined  = null;
+      helpers.removeObserver('trackHighlight');
     }
   }
 };

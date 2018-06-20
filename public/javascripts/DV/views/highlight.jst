@@ -1,0 +1,32 @@
+<div class="DV-highlight <%= accessClass %> DV-ownsHighlight" style="top:<%= top %>px; width:<%= width %>px; margin-left: <%=leftMargin%>px;" id="DV-highlight-<%= id %>" data-id="<%= id %>">
+
+  <div class="DV-highlightTab" style="top:<%= tabTop %>px;">
+    <div class="DV-highlightClose DV-trigger">
+    </div>
+  </div>
+
+  <div class="DV-highlightRegion <%= approvedClass %>" style="margin-left:<%= excerptMarginLeft - 4 %>px; height:<%= excerptHeight %>px; width:<%= excerptWidth - 1 %>px;">
+    <div class="<%= accessClass %>">
+      <div class="DV-highlightEdge DV-highlightEdgeTop"></div>
+      <div class="DV-highlightEdge DV-highlightEdgeRight"></div>
+      <div class="DV-highlightEdge DV-highlightEdgeBottom"></div>
+      <div class="DV-highlightEdge DV-highlightEdgeLeft"></div>
+      <div class="DV-highlightCorner DV-highlightCornerTopLeft"></div>
+      <div class="DV-highlightCorner DV-highlightCornerTopRight"></div>
+      <div class="DV-highlightCorner DV-highlightCornerBottomLeft"></div>
+      <div class="DV-highlightCorner DV-highlightCornerBottomRight"></div>
+    </div>
+    <!--<div class="DV-highlightRegionExclusive"></div>-->
+  </div>
+
+  <div class="DV-highlightContent" style="margin-left: <%= showWindowMarginLeft %>px;">
+    <div class="DV-pagination DV-hideNav">
+      <% if( contentCount > 1 ){ %>
+          <% if( currentContent != 1 ) { %><span class="DV-trigger DV-highlightPrevious" title="<%= DV.t('previous_note') %>"><%= DV.t('previous') %></span><% } %>
+          <span class="DV-groupCount">(<%=currentContent%> of <%=contentCount%>)</span>
+          <% if( currentContent != contentCount ){ %><span class="DV-trigger DV-highlightNext" title="<%= DV.t('next_note') %>"><%= DV.t('next') %></span><% } %>
+      <% } %>
+    </div>
+    <%= innerHTML %>
+  </div>
+</div>

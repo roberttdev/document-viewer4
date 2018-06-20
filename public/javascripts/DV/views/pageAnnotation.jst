@@ -1,20 +1,20 @@
-<div class="DV-annotation DV-pageNote <%= orderClass %> <%= accessClass %> <% if (owns_note) { %>DV-ownsAnnotation<% } %>" style="top:<%= top %>px;" id="DV-annotation-<%= id %>" data-id="<%= id %>">
-  <div class="DV-annotationTab">
-    <div class="DV-annotationClose DV-trigger"><%= DV.t('pg') %> <%= pageNumber %></div>
+<div class="DV-highlight DV-pageNote <%= orderClass %> <%= accessClass %> <% if (owns_note) { %>DV-ownsHighlight<% } %>" style="top:<%= top %>px;" id="DV-highlight-<%= id %>" data-id="<%= id %>">
+  <div class="DV-highlightTab">
+    <div class="DV-highlightClose DV-trigger"><%= DV.t('pg') %> <%= pageNumber %></div>
   </div>
 
-  <div class="DV-annotationContent">
+  <div class="DV-highlightContent">
     <!-- Header -->
     <div class="DV-annotationHeader DV-clearfix">
       <div class="DV-pagination DV-editHidden">
-        <span class="DV-trigger DV-annotationPrevious" title="<%= DV.t('previous_note') %>"><%= DV.t('previous') %></span>
-        <span class="DV-trigger DV-annotationNext" title="<%= DV.t('next_note') %>"><%= DV.t('next') %></span>
+        <span class="DV-trigger DV-highlightPrevious" title="<%= DV.t('previous_note') %>"><%= DV.t('previous') %></span>
+        <span class="DV-trigger DV-highlightNext" title="<%= DV.t('next_note') %>"><%= DV.t('next') %></span>
       </div>
       <div class="DV-annotationGoto DV-editHidden"><div class="DV-trigger"><%= DV.t('pg') %><%= pageNumber %></div></div>
       <div class="DV-annotationTitle DV-editHidden"><%= title %></div>
       <input class="DV-annotationTitleInput DV-editVisible" type="text" placeholder="<%= DV.t('annotation_title') %>" value="<%= title.replace(/"/g, '&quot;') %>" />
       <% if (access == 'exclusive') { %>
-        <div class="DV-annotationDraftLabel DV-editHidden DV-interface"><%= DV.t('draft') %></div>
+        <div class="DV-highlightDraftLabel DV-editHidden DV-interface"><%= DV.t('draft') %></div>
       <% } else if (access == 'private') { %>
         <div class="DV-privateLock DV-editHidden" title="<%= DV.t('private_note',2) %>"></div>
       <% } %>
@@ -34,17 +34,17 @@
         </div>
       <% } %>
       <% if (access == 'exclusive') { %>
-        <div class="DV-annotationWarning DV-interface DV-editHidden">
+        <div class="DV-highlightWarning DV-interface DV-editHidden">
           <%= DV.t('draft_note_visible') %>
         </div>
       <% } else if (access == 'private') { %>
-        <div class="DV-annotationWarning DV-interface DV-editHidden">
+        <div class="DV-highlightWarning DV-interface DV-editHidden">
           <%= DV.t('private_note_visible') %>
         </div>
       <% } %>
       <div class="DV-annotationEditControls DV-editVisible">
         <div class="DV-clearfix">
-          <div class="minibutton warn DV-deleteAnnotation float_left"><%= DV.t('delete') %></div>
+          <div class="minibutton warn DV-deleteHighlight float_left"><%= DV.t('delete') %></div>
           <div class="minibutton default DV-saveAnnotation float_right">
             <% if (access == 'exclusive') { %>
               <%= DV.t('publish') %>

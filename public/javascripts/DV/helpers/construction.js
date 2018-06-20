@@ -1,9 +1,9 @@
- // Renders the navigation sidebar for chapters and annotations.
+ // Renders the navigation sidebar for chapters and highlights.
 DV._.extend(DV.Schema.helpers, {
 
-  showAnnotations : function() {
-    if (this.viewer.options.showAnnotations === false) return false;
-    return DV._.size(this.viewer.schema.data.annotationsById) > 0;
+  showHighlights : function() {
+    if (this.viewer.options.showHighlights === false) return false;
+    return DV._.size(this.viewer.schema.data.highlightsById) > 0;
   },
 
   renderViewer: function(){
@@ -26,8 +26,8 @@ DV._.extend(DV.Schema.helpers, {
     var contribs = doc.contributor && doc.contributor_organization &&
                    ('' + doc.contributor + ', '+ doc.contributor_organization);
 
-    var showAnnotations = this.showAnnotations();
-    var printNotesURL = (showAnnotations) && doc.resources.print_annotations;
+    var showHighlights = this.showHighlights();
+    var printNotesURL = (showHighlights) && doc.resources.print_highlights;
 
     var viewerOptions = {
       options : this.viewer.options,
@@ -68,7 +68,7 @@ DV._.extend(DV.Schema.helpers, {
   // the sidebar.
   displayNavigation : function() {
     var doc = this.viewer.schema.document;
-    var missing = (!doc.description && !DV._.size(this.viewer.schema.data.annotationsById) && !this.viewer.schema.data.sections.length);
+    var missing = (!doc.description && !DV._.size(this.viewer.schema.data.highlightsById) && !this.viewer.schema.data.sections.length);
     this.viewer.$('.DV-supplemental').toggleClass('DV-noNavigation', missing);
   },
 
@@ -89,14 +89,14 @@ DV._.extend(DV.Schema.helpers, {
 
     /* ---------------------------------------------------- start the nav helper methods */
     var getAnnotionsByRange = function(rangeStart, rangeEnd){
-      var annotations = [];
+      var highlights = [];
       for(var i = rangeStart, len = rangeEnd; i < len; i++){
         if(notes[i]){
-          annotations.push(notes[i]);
+          highlights.push(notes[i]);
           nav[i] = '';
         }
       }
-      return annotations.join('');
+      return highlights.join('');
     };
 
     var createChapter = function(chapter){
@@ -106,23 +106,23 @@ DV._.extend(DV.Schema.helpers, {
       return (JST['DV/views/chapterNav'](chapter));
     };
 
-    var createNavAnnotations = function(annotationIndex){
-      var renderedAnnotations = [];
-      var annotations = me.viewer.schema.data.annotationsByPage[annotationIndex];
+    var createNavHighlights = function(highlightIndex){
+      var renderedHighlights = [];
+      var highlights = me.viewer.schema.data.highlightsByPage[highlightIndex];
 
-      for (var j=0; j<annotations.length; j++) {
-        var annotation = annotations[j];
-        renderedAnnotations.push(JST['DV/views/annotationNav'](annotation));
-        bolds.push("#DV-selectedAnnotation-" + annotation.id + " #DV-annotationMarker-" + annotation.id + " .DV-navAnnotationTitle");
+      for (var j=0; j<highlights.length; j++) {
+        var highlight = highlights[j];
+        renderedHighlights.push(JST['DV/views/highlightNav'](highlight));
+        bolds.push("#DV-selectedHighlight-" + highlight.id + " #DV-highlightMarker-" + highlight.id + " .DV-navHighlightTitle");
       }
-      return renderedAnnotations.join('');
+      return renderedHighlights.join('');
     };
     /* ---------------------------------------------------- end the nav helper methods */
 
-    if (this.showAnnotations()) {
+    if (this.showHighlights()) {
       for(var i = 0,len = this.models.document.totalPages; i < len;i++){
-        if(this.viewer.schema.data.annotationsByPage[i]){
-          nav[i]   = createNavAnnotations(i);
+        if(this.viewer.schema.data.highlightsByPage[i]){
+          nav[i]   = createNavHighlights(i);
           notes[i] = nav[i];
         }
       }
@@ -136,12 +136,12 @@ DV._.extend(DV.Schema.helpers, {
         section.id         = section.id || parseInt(DV._.uniqueId());
         section.pageNumber = section.page;
         section.endPage    = nextSection ? nextSection.page - 1 : this.viewer.schema.data.totalPages;
-        var annotations    = getAnnotionsByRange(section.pageNumber - 1, section.endPage);
+        var highlights    = getAnnotionsByRange(section.pageNumber - 1, section.endPage);
 
-        if(annotations != '') {
+        if(highlights != '') {
           section.navigationExpander       = navigationExpander;
           section.navigationExpanderClass  = 'DV-hasChildren';
-          section.noteViews                = annotations;
+          section.noteViews                = highlights;
           nav[section.pageNumber - 1]      = createChapter(section);
         } else {
           section.navigationExpanderClass  = 'DV-noChildren';
@@ -158,7 +158,7 @@ DV._.extend(DV.Schema.helpers, {
     var chaptersContainer = this.viewer.$('div.DV-chaptersContainer');
     chaptersContainer.html(navigationView);
     chaptersContainer.unbind('click').bind('click',this.events.compile('handleNavigation'));
-    this.viewer.schema.data.sections.length || DV._.size(this.viewer.schema.data.annotationsById) ?
+    this.viewer.schema.data.sections.length || DV._.size(this.viewer.schema.data.highlightsById) ?
        chaptersContainer.show() : chaptersContainer.hide();
     this.displayNavigation();
 
@@ -184,17 +184,17 @@ DV._.extend(DV.Schema.helpers, {
     }
 
     // Hide and show navigation flags:
-    var showAnnotations = this.showAnnotations();
+    var showHighlights = this.showHighlights();
     var showPages       = this.models.document.totalPages > 1;
     var showSearch      = (this.viewer.options.search !== false) &&
                           (this.viewer.options.text !== false) &&
                           (!this.viewer.options.width || this.viewer.options.width >= 540);
-    var noFooter = (!showAnnotations && !showPages && !showSearch && !this.viewer.options.sidebar);
+    var noFooter = (!showHighlights && !showPages && !showSearch && !this.viewer.options.sidebar);
 
 
-    // Hide annotations, if there are none:
-    var $annotationsView = this.viewer.$('.DV-annotationView');
-    $annotationsView[showAnnotations ? 'show' : 'hide']();
+    // Hide highlights, if there are none:
+    var $highlightsView = this.viewer.$('.DV-highlightView');
+    $highlightsView[showHighlights ? 'show' : 'hide']();
 
     // Hide the text tab, if it's disabled.
     if (showSearch) {
@@ -213,13 +213,13 @@ DV._.extend(DV.Schema.helpers, {
     }
 
     // Hide the Documents tab if it's the only tab left.
-    if (!showAnnotations && !showPages && !showSearch) {
+    if (!showHighlights && !showPages && !showSearch) {
       this.viewer.$('.DV-views').hide();
     }
 
     this.viewer.api.roundTabCorners();
 
-    // Hide the entire sidebar, if there are no annotations or sections.
+    // Hide the entire sidebar, if there are no highlights or sections.
     //var showChapters = this.models.chapters.chapters.length > 0;
 
     // Remove and re-render the nav controls.
@@ -228,7 +228,7 @@ DV._.extend(DV.Schema.helpers, {
     if (showPages || this.viewer.options.sidebar) {
       var navControls = JST['DV/views/navControls']({
         totalPages: this.viewer.schema.data.totalPages,
-        totalAnnotations: this.viewer.schema.data.totalAnnotations
+        totalHighlights: this.viewer.schema.data.totalHighlights
       });
       this.viewer.$('.DV-navControlsContainer').html(navControls);
     }
@@ -249,7 +249,7 @@ DV._.extend(DV.Schema.helpers, {
 
     // Check if the zoom is showing, and if not, shorten the width of search
     DV._.defer(DV._.bind(function() {
-      if ((this.elements.viewer.width() <= 700) && (showAnnotations || showPages || showSearch)) {
+      if ((this.elements.viewer.width() <= 700) && (showHighlights || showPages || showSearch)) {
         this.viewer.$('.DV-controls').addClass('DV-narrowControls');
       }
     }, this));

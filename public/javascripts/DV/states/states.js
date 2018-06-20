@@ -33,24 +33,24 @@ DV.Schema.states = {
     this.models.document.computeOffsets();
     this.helpers.addObserver('drawPages');
     this.helpers.registerHashChangeEvents();
-    this.dragReporter = new DV.DragReporter(this, '.DV-pageCollection',DV.jQuery.proxy(this.helpers.shift, this), { ignoreSelector: '.DV-annotationContent' });
+    this.dragReporter = new DV.DragReporter(this, '.DV-pageCollection',DV.jQuery.proxy(this.helpers.shift, this), { ignoreSelector: '.DV-highlightContent' });
     this.helpers.startCheckTimer();
     this.helpers.handleInitialState();
     DV._.defer(DV._.bind(this.helpers.autoZoomPage, this.helpers));
   },
 
-  ViewAnnotation: function(){
+  ViewHighlight: function(){
     this.helpers.reset(); // in construction.js
-    this.helpers.ensureAnnotationImages();
-    this.activeAnnotationId = null;
+    this.helpers.ensureHighlightImages();
+    this.activeHighlightId = null;
     this.acceptInput.deny();
-    // Nudge IE to force the annotations to repaint.
+    // Nudge IE to force the highlights to repaint.
     if (DV.jQuery.browser.msie) {
-      this.elements.annotations.css({zoom : 0});
-      this.elements.annotations.css({zoom : 1});
+      this.elements.highlights.css({zoom : 0});
+      this.elements.highlights.css({zoom : 1});
     }
 
-    this.helpers.toggleContent('viewAnnotations');
+    this.helpers.toggleContent('ViewHighlights');
     this.compiled.next();
     return true;
   },

@@ -7,9 +7,9 @@ DV._.extend(DV.Schema.helpers, {
   setActiveChapter: function(chapterId){
     if (chapterId) this.elements.chaptersContainer.attr('id','DV-selectedChapter-'+chapterId);
   },
-  setActiveAnnotationInNav: function(annotationId){
-    if(annotationId != null){
-      this.elements.navigation.attr('id','DV-selectedAnnotation-'+annotationId);
+  setActiveHighlightInNav: function(highlightId){
+    if(highlightId != null){
+      this.elements.navigation.attr('id','DV-selectedHighlight-'+highlightId);
     }else{
       this.elements.navigation.attr('id','');
     }

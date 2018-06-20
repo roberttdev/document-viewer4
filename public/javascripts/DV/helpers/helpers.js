@@ -2,7 +2,7 @@ DV.Schema.helpers = {
 
     HOST_EXTRACTOR : (/https?:\/\/([^\/]+)\//),
 
-    annotationClassName: '.DV-annotation',
+    highlightClassName: '.DV-highlight',
 
     // Bind all events for the docviewer
     // live/delegate are the preferred methods of event attachment
@@ -35,9 +35,9 @@ DV.Schema.helpers = {
       viewer.$('.DV-navControls').delegate('span.DV-next','click', compiled.next);
       viewer.$('.DV-navControls').delegate('span.DV-previous','click', compiled.previous);
 
-      viewer.$('.DV-annotationView').delegate('.DV-trigger','click',function(e){
+      viewer.$('.DV-highlightView').delegate('.DV-trigger','click',function(e){
         e.preventDefault();
-        context.open('ViewAnnotation');
+        context.open('ViewHighlight');
       });
       viewer.$('.DV-documentView').delegate('.DV-trigger','click',function(e){
         // history.save('document/p'+context.models.document.currentPage());
@@ -66,21 +66,21 @@ DV.Schema.helpers = {
 
       this.elements.viewer.delegate('.DV-fullscreen', 'click', DV._.bind(this.openFullScreen, this));
 
-      var boundToggle  = DV.jQuery.proxy(this.annotationBridgeToggle, this);
+      var boundToggle  = DV.jQuery.proxy(this.highlightBridgeToggle, this);
       var collection   = this.elements.collection;
 
-      collection.delegate('.DV-annotationTab','click', boundToggle);
-      collection.delegate('.DV-annotationRegion','click', DV.jQuery.proxy(this.annotationBridgeShow, this));
-      collection.delegate('.DV-annotationNext','click', DV.jQuery.proxy(this.annotationBridgeNext, this));
-      collection.delegate('.DV-annotationPrevious','click', DV.jQuery.proxy(this.annotationBridgePrevious, this));
-      collection.delegate('.DV-showEdit','click', DV.jQuery.proxy(this.showAnnotationEdit, this));
-      collection.delegate('.DV-cancelEdit','click', DV.jQuery.proxy(this.cancelAnnotationEdit, this));
-      collection.delegate('.DV-saveAnnotation','click', DV.jQuery.proxy(this.saveAnnotation, this));
-      collection.delegate('.DV-saveAnnotationDraft','click', DV.jQuery.proxy(this.saveAnnotation, this));
+      collection.delegate('.DV-highlightTab','click', boundToggle);
+      collection.delegate('.DV-highlightRegion','click', DV.jQuery.proxy(this.highlightBridgeSelected, this));
+      collection.delegate('.DV-highlightNext','click', DV.jQuery.proxy(this.highlightBridgeNext, this));
+      collection.delegate('.DV-highlightPrevious','click', DV.jQuery.proxy(this.highlightBridgePrevious, this));
+      collection.delegate('.DV-showEdit','click', DV.jQuery.proxy(this.showHighlightEdit, this));
+      collection.delegate('.DV-cancelEdit','click', DV.jQuery.proxy(this.cancelHighlightEdit, this));
+      collection.delegate('.DV-saveAnnotation','click', DV.jQuery.proxy(this.saveHighlight, this));
+      collection.delegate('.DV-cloneConfirm', 'click', DV.jQuery.proxy(this.cloneConfirm, this));
       collection.delegate('.DV-pageNumber', 'click', DV._.bind(this.permalinkPage, this, 'document'));
       collection.delegate('.DV-textCurrentPage', 'click', DV._.bind(this.permalinkPage, this, 'text'));
-      collection.delegate('.DV-annotationTitle', 'click', DV._.bind(this.permalinkAnnotation, this));
-      collection.delegate('.DV-permalink', 'click', DV._.bind(this.permalinkAnnotation, this));
+      collection.delegate('.DV-annotationTitle', 'click', DV._.bind(this.permalinkHighlight, this));
+      collection.delegate('.DV-permalink', 'click', DV._.bind(this.permalinkHighlight, this));
 
       // Thumbnails
       viewer.$('.DV-thumbnails').delegate('.DV-thumbnail-page', 'click', function(e) {
@@ -110,12 +110,12 @@ DV.Schema.helpers = {
         viewer.$('.DV-descriptionToggle').toggleClass('DV-showDescription');
       });
 
-      var cleanUp = DV.jQuery.proxy(viewer.pageSet.cleanUp, this);
+      var cleanUp = DV.jQuery.proxy(viewer.pageSet.cleanUp, viewer.pageSet);
 
       this.elements.window.live('mousedown',
         function(e){
           var el = viewer.$(e.target);
-          if (el.parents().is('.DV-annotation') || el.is('.DV-annotation')) return true;
+          if (el.parents().is('.DV-highlight') || el.is('.DV-highlight')) return true;
           if(context.elements.window.hasClass('DV-coverVisible')){
             if((el.width() - parseInt(e.clientX,10)) >= 15){
               cleanUp();
@@ -137,7 +137,7 @@ DV.Schema.helpers = {
       // When the document is scrolled, even in the background, resume polling.
       this.elements.window.bind('scroll.' + docId, DV.jQuery.proxy(this.focusWindow, this));
 
-      this.elements.coverPages.live('mousedown', cleanUp);
+      this.elements.coverPages.live('mousedown', function(e){ cleanUp.call(); });
 
       viewer.acceptInput = this.elements.currentPage.acceptInput({ changeCallBack: DV.jQuery.proxy(this.acceptInputCallBack,this) });
 
@@ -160,7 +160,7 @@ DV.Schema.helpers = {
 
     // We're entering the Notes tab -- make sure that there are no data-src
     // attributes remaining.
-    ensureAnnotationImages : function() {
+    ensureHighlightImages : function() {
       this.viewer.$(".DV-img[data-src]").each(function() {
         var el = DV.jQuery(this);
         el.attr('src', el.attr('data-src'));
@@ -259,16 +259,16 @@ DV.Schema.helpers = {
       this.viewer.history.save(mode + '/p' + number);
     },
 
-    // Click to open an annotation's permalink.
-    permalinkAnnotation : function(e) {
-      var id   = this.viewer.$(e.target).closest('.DV-annotation').attr('data-id');
-      var anno = this.viewer.schema.getAnnotation(id);
+    // Click to open an highlight's permalink.
+    permalinkHighlight : function(e) {
+      var id   = this.viewer.$(e.target).closest('.DV-highlight').attr('data-id');
+      var anno = this.viewer.schema.getHighlight(id);
       var sid  = anno.server_id || anno.id;
       if (this.viewer.state == 'ViewDocument') {
-        this.viewer.pageSet.showAnnotation(anno);
+        this.viewer.pageSet.showHighlight(anno);
         this.viewer.history.save('document/p' + anno.pageNumber + '/a' + sid);
       } else {
-        this.viewer.history.save('annotation/a' + sid);
+        this.viewer.history.save('highlight/a' + sid);
       }
     },
 
@@ -297,14 +297,14 @@ DV.Schema.helpers = {
 
     gotoPage: function(e){
       e.preventDefault();
-      var aid           = this.viewer.$(e.target).parents('.DV-annotation').attr('rel').replace('aid-','');
-      var annotation    = this.viewer.schema.getAnnotation(aid);
+      var aid           = this.viewer.$(e.target).parents('.DV-highlight').attr('rel').replace('aid-','');
+      var highlight    = this.viewer.schema.getHighlight(aid);
       var viewer        = this.viewer;
 
       if(viewer.state !== 'ViewDocument'){
-        this.models.document.setPageIndex(annotation.index);
+        this.models.document.setPageIndex(highlight.index);
         viewer.open('ViewDocument');
-        // this.viewer.history.save('document/p'+(parseInt(annotation.index,10)+1));
+        // this.viewer.history.save('document/p'+(parseInt(highlight.index,10)+1));
       }
     },
 
@@ -315,8 +315,8 @@ DV.Schema.helpers = {
 
       // construct url fragment based on current viewer state
       switch (this.viewer.state) {
-        case 'ViewAnnotation':
-          url += '#annotation/a' + this.viewer.activeAnnotationId; // default to the top of the annotations page.
+        case 'ViewHighlight':
+          url += '#highlight/a' + this.viewer.activeHighlightId; // default to the top of the highlights page.
           break;
         case 'ViewDocument':
           url += '#document/p' + currentPage;
@@ -356,7 +356,7 @@ DV.Schema.helpers = {
     },
 
     toggleContent: function(toggleClassName){
-      this.elements.viewer.removeClass('DV-viewText DV-viewSearch DV-viewDocument DV-viewAnnotations DV-viewThumbnails').addClass('DV-'+toggleClassName);
+      this.elements.viewer.removeClass('DV-viewText DV-viewSearch DV-viewDocument DV-ViewHighlights DV-viewThumbnails').addClass('DV-'+toggleClassName);
     },
 
     jump: function(pageIndex, modifier, forceRedraw){
@@ -425,11 +425,11 @@ DV.Schema.helpers = {
       history.register(/p(\d*)$/, DV._.bind(events.handleHashChangeLegacyViewDocumentPage,this.events));
       history.register(/p=(\d*)$/, DV._.bind(events.handleHashChangeLegacyViewDocumentPage,this.events));
 
-      // Handle annotation loading in document view
-      history.register(/document\/p(\d*)\/a(\d*)$/, DV._.bind(events.handleHashChangeViewDocumentAnnotation,this.events));
+      // Handle highlight loading in document view
+      history.register(/document\/p(\d*)\/a(\d*)$/, DV._.bind(events.handleHashChangeViewDocumentHighlight,this.events));
 
-      // Handle annotation loading in annotation view
-      history.register(/annotation\/a(\d*)$/, DV._.bind(events.handleHashChangeViewAnnotationAnnotation,this.events));
+      // Handle highlight loading in highlight view
+      history.register(/highlight\/a(\d*)$/, DV._.bind(events.handleHashChangeViewHighlightHighlight,this.events));
 
       // Handle loading of the pages view
       history.register(/pages$/, DV._.bind(events.handleHashChangeViewPages, events));
@@ -499,7 +499,7 @@ DV.Schema.helpers = {
         var opts = this.viewer.options;
         this.viewer.open('ViewDocument');
         if (opts.note) {
-          this.viewer.pageSet.showAnnotation(this.viewer.schema.data.annotationsById[opts.note]);
+          this.viewer.pageSet.showHighlight(this.viewer.schema.data.highlightsById[opts.note]);
         } else if (opts.page) {
           this.jump(opts.page - 1);
         }

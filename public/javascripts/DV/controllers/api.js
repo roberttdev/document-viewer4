@@ -162,35 +162,45 @@ DV.Api.prototype = {
     }
   },
 
-  getAnnotationsByPageIndex : function(idx) {
-    return this.viewer.schema.getAnnotationsByPage(idx);
+  getHighlightsByPageIndex : function(idx) {
+    return this.viewer.schema.getHighlightsByPage(idx);
   },
 
-  getAnnotation : function(aid) {
-    return this.viewer.schema.getAnnotation(aid);
+  getHighlight : function(aid) {
+    return this.viewer.schema.getHighlight(aid);
   },
 
-  // Add a new annotation to the document, prefilled to any extent.
-  addAnnotation : function(anno) {
-    anno = this.viewer.schema.loadAnnotation(anno);
-    this.viewer.pageSet.addPageAnnotation(anno);
-    this.viewer.pageSet.showAnnotation(anno, {active: true, edit : true});
-    return anno;
+  // Add a new highlight to the document, prefilled to any extent.
+  addHighlight : function(highl) {
+    highl = this.viewer.schema.loadHighlight(highl);
+    this.viewer.pageSet.addHighlight(highl);
+    var highlightHash = {highlight_id: highl.id};
+    ('annotations' in highl && highl.annotations.length > 0) ? highlightHash['anno_id'] = highl.annotations[0].server_id : highlightHash['graph_id'] = highl.graphs[0].server_id;
+    this.viewer.pageSet.showHighlight(highlightHash, {active: true, edit : true});
+    return highl;
   },
 
-  // Find annotation and make it the active one
-  selectAnnotation: function(anno, showEdit) {
-      anno = this.viewer.schema.findAnnotation(anno);
-      this.viewer.pageSet.showAnnotation(anno, {active: true, edit : showEdit});
+  //Add more content to existing highlight
+  addContentToHighlight: function(highlightId, new_content, showEdit){
+      highl = this.viewer.schema.findHighlight({id: highlightId });
+      this.viewer.schema.addHighlightContent(highl, new_content);
+      this.viewer.pageSet.refreshHighlight(highl, true, showEdit);
   },
 
-  // Remove annotation/group relationship (and annotation if no relationships left)
-  deleteAnnotation: function(anno, group) {
-      anno = this.viewer.schema.findAnnotation(anno);
-      if ( this.viewer.schema.removeAnnotationGroup(anno, group) ) {
-        this.viewer.pageSet.removePageAnnotation(anno);
+  // Find highlight and make it the active one
+  selectHighlight: function(highlightInfo, showEdit) {
+      this.viewer.schema.setActiveContent(highlightInfo);
+      this.viewer.pageSet.showHighlight(highlightInfo, {active: true, edit : showEdit, callbacks: false});
+  },
+
+  // Remove highlight/group relationship (and highlight if no relationships left)
+  deleteHighlight: function(highlightInfo) {
+      highl = this.viewer.schema.findHighlight({id: highlightInfo.highlight_id });
+
+      if ( this.viewer.schema.removeHighlightContent(highl, highlightInfo) ) {
+        this.viewer.pageSet.removeHighlight(highl);
       }else{
-        this.viewer.pageSet.refreshPageAnnotation(anno);
+        this.viewer.pageSet.refreshHighlight(highl, false, false);
       }
   },
 
@@ -199,42 +209,48 @@ DV.Api.prototype = {
     this.viewer.schema.setRecommendations(recArray);
   },
 
-  //Populate any missing annotation IDs with data from client
-  //locationIds: hash containing ID and location
-  syncAnnotationIDs: function(locationIds) {
-      this.viewer.schema.syncIDs(locationIds);
+  //Populate highlight(s) with updated data from DC client
+  syncHighlights: function(highlightInfo) {
+      var _this = this;
+      _this.viewer.schema.syncHighlight(highlightInfo);
+      this.viewer.activeHighlight.highlightEl.removeClass('DV-editing');
+      this.viewer.pageSet.refreshHighlight(this.viewer.activeHighlight.model, true, false);
   },
 
-  //Pass group association to DV, to update DV defs if necessary
-  syncGroupAnnotation: function(annoId, groupId){
-      var syncedAnno = this.viewer.schema.addAnnotationGroup(annoId, groupId);
-      this.viewer.pageSet.refreshPageAnnotation(syncedAnno, groupId);
+  //Request current highlight to display/hide clone confirm buttons
+  requestCloneConfirm: function(setTo) {
+      this.viewer.activeHighlight.setCloneConfirm(setTo);
   },
 
-  //Reload current annotations store with passed in annotations
-  reloadAnnotations: function(annos){
-      this.viewer.schema.reloadAnnotations(annos);
+  //Reload current highlights store with passed in highlights
+  reloadHighlights: function(annos){
+      this.viewer.schema.reloadHighlights(annos);
       this.viewer.pageSet.redraw(true, true);
   },
 
-  // Register a callback for when an annotation is saved.
-  onAnnotationSave : function(callback) {
+  // Register a callback for when an highlight is saved.
+  onHighlightSave : function(callback) {
     this.viewer.saveCallbacks.push(callback);
   },
 
-  // Register a callback for when an annotation is deleted.
-  onAnnotationDelete : function(callback) {
+  // Register a callback for when an highlight is deleted.
+  onHighlightDelete : function(callback) {
     this.viewer.deleteCallbacks.push(callback);
   },
 
-  // Register a callback for when an annotation is deleted.
-  onAnnotationSelect : function(callback) {
+  // Register a callback for when an highlight is deleted.
+  onHighlightSelect : function(callback) {
     this.viewer.selectCallbacks.push(callback);
   },
 
   // Register a callback for when annotating is cancelled.
-  onAnnotationCancel : function(callback) {
+  onHighlightCancel : function(callback) {
     this.viewer.cancelCallbacks.push(callback);
+  },
+
+  // Register a callback for when a clone is confirmed.
+  onCloneConfirm : function(callback) {
+      this.viewer.cloneCallbacks.push(callback);
   },
 
   setConfirmStateChange : function(callback) {
@@ -306,35 +322,16 @@ DV.Api.prototype = {
     delete DV.viewers[this.viewer.schema.document.id];
   },
 
-  //Request to abandon current active annotation (hide or remove); call success if request succeeds (i.e. not user cancelled)
+  //Request to abandon current active highlight (hide or remove); call success if request succeeds (i.e. not user cancelled)
   cleanUp: function(success) {
-    if(this.viewer.activeAnnotation){
-      var anno = this.viewer.activeAnnotation.model;
-      if( anno.unsaved == true ){
-        var _api = this;
-        this.viewer.activeAnnotation.requestHide(true, function(){
-          //If unsaved, just remove completely
-          if(anno.anno_type == 'graph'){
-            _api.viewer.schema.removeAnnotation(anno);
-          }else{
-            _api.viewer.schema.removeAnnotationGroup(anno, anno.groups[0].group_id);
-          }
-          _api.viewer.pageSet.removePageAnnotation(anno);
-          if(success){ success.call(); }
-        });
-      }else {
-        this.viewer.activeAnnotation.requestHide(true, success);
-      }
-    }else{
-      if(success){ success.call(); }
-    }
+    this.viewer.pageSet.cleanUp(success);
   },
 
 
   //Activate/deactivate 'approved' view for anno (temporary, data does not update)
   markApproval: function(anno_id, group_id, approval) {
       var anno = this.viewer.schema.markApproval(anno_id, group_id, approval);
-      this.viewer.pageSet.refreshPageAnnotation(anno, group_id, false);
+      this.viewer.pageSet.refreshHighlight(anno, group_id, false);
   },
 
   // ---------------------- Enter/Leave Edit Modes -----------------------------

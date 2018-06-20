@@ -4,7 +4,7 @@
 
 .DV-viewText .DV-set,
 .DV-viewText .DV-bar,
-.DV-viewText .DV-allAnnotations{
+.DV-viewText .DV-allHighlights{
   display:none;
 }
 
@@ -12,8 +12,8 @@
   display:block;
 }
 
-.DV-viewText .DV-currentAnnotationPrefix,
-.DV-viewText .DV-totalAnnotations{
+.DV-viewText .DV-currentHighlightPrefix,
+.DV-viewText .DV-totalHighlights{
   display:none;
 }
 
@@ -30,7 +30,7 @@
   margin-left:-1px;
 }
 
-.DV-viewText .DV-annotationMarker,
+.DV-viewText .DV-highlightMarker,
 .DV-viewText .DV-chapter{
   margin-left:14px;
 }

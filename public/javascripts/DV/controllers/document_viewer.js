@@ -23,7 +23,7 @@ DV.DocumentViewer = function(options) {
   this.scrollPosition     = null;
   this.checkTimer         = {};
   this.busy               = false;
-  this.annotationToLoadId = null;
+  this.highlightToLoadId = null;
   this.dragReporter       = null;
   this.compiled           = {};
   this.tracker            = {};
@@ -33,6 +33,7 @@ DV.DocumentViewer = function(options) {
   this.deleteCallbacks          = [];
   this.selectCallbacks          = [];
   this.cancelCallbacks          = [];
+  this.cloneCallbacks           = [];
 
   this.events     = DV._.extend(this.events, {
     viewer      : this,
@@ -98,20 +99,24 @@ DV.DocumentViewer.prototype.notifyChangedState = function() {
   DV._.each(this.onStateChangeCallbacks, function(c) { c(); });
 };
 
-DV.DocumentViewer.prototype.fireSaveCallbacks  = function(anno) {
-  DV._.each(this.saveCallbacks, function(c){ c(anno); });
+DV.DocumentViewer.prototype.fireCloneCallbacks  = function(highl_content) {
+    DV._.each(this.cloneCallbacks, function(c){ c(highl_content); });
 };
 
-DV.DocumentViewer.prototype.fireDeleteCallbacks = function(anno) {
-  DV._.each(this.deleteCallbacks, function(c){ c(anno); });
+DV.DocumentViewer.prototype.fireSaveCallbacks  = function(highl_content) {
+  DV._.each(this.saveCallbacks, function(c){ c(highl_content); });
 };
 
-DV.DocumentViewer.prototype.fireSelectCallbacks = function(anno) {
-  DV._.each(this.selectCallbacks, function(c){ c(anno); });
+DV.DocumentViewer.prototype.fireDeleteCallbacks = function(highl_content) {
+  DV._.each(this.deleteCallbacks, function(c){ c(highl_content); });
 };
 
-DV.DocumentViewer.prototype.fireCancelCallbacks = function(anno) {
-  DV._.each(this.cancelCallbacks, function (c) { c(anno); });
+DV.DocumentViewer.prototype.fireSelectCallbacks = function(highl_content) {
+  DV._.each(this.selectCallbacks, function(c){ c(highl_content); });
+};
+
+DV.DocumentViewer.prototype.fireCancelCallbacks = function(highl_content) {
+  DV._.each(this.cancelCallbacks, function (c) { c(highl_content); });
 };
 
 // Record a hit on this document viewer.
@@ -154,7 +159,7 @@ DV.load = function(documentRep, options) {
     viewer.loadModels();
 
     //If view-only, determine page to show
-    if( options.view_only ){ viewer.view_only_page = json.annotations[0].page; }
+    if( options.view_only ){ viewer.view_only_page = json.highlights[0].page; }
 
     DV.jQuery(function() {
       viewer.open('InitialLoad');

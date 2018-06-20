@@ -65,17 +65,17 @@
   padding-left: 0px;
 }
 
-/* Annotations ---------------------------------------*/
+/* Highlights ---------------------------------------*/
 
-.DV-mini .DV-annotationTab {
+.DV-mini .DV-highlightTab {
   background-image: url(../../../images/DV/embed/tabs-small.png);
   width: 29px;
   left: -13px;
   height: 15px;
 }
-  .DV-mini .DV-activeAnnotation .DV-annotationTab {
+  .DV-mini .DV-activeHighlight .DV-highlightTab {
     background-position: 0 -30px;
   }
-  .DV-mini .DV-activeAnnotation .DV-annotationClose {
+  .DV-mini .DV-activeHighlight .DV-highlightClose {
     background-position: 4px 2px;
   }

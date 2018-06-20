@@ -31,7 +31,7 @@ DV.model.Document = function(viewer){
   if (this.zoomLevel > maxZoom) this.zoomLevel = maxZoom;
 
   if( this.viewer.options.view_only ){
-    this.view_only_anno = data.annotationsById[0];
+    this.view_only_anno = data.highlightsById[0];
   }
 };
 

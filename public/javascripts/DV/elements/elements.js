@@ -13,7 +13,7 @@ DV.Schema.elements =
   { name: 'currentPage',        query: 'span.DV-currentPage'},
   { name: 'well',               query: 'div.DV-well'},
   { name: 'collection',         query: 'div.DV-pageCollection'},
-  //{ name: 'annotations',        query: 'div.DV-allAnnotations'},
+  //{ name: 'highlights',        query: 'div.DV-allHighlights'},
   { name: 'navigation',         query: 'div.DV-navigation' },
   //{ name: 'chaptersContainer',  query: 'div.DV-chaptersContainer' },
   { name: 'searchInput',        query: 'input.DV-searchInput' },

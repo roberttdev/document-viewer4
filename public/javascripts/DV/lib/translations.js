@@ -9,7 +9,7 @@
 // {
 //   'en': {
 //     doc: 'Document',
-//     annot: 'Annotation'
+//     annot: 'Highlight'
 //   },{
 //     'zh': {
 //       doc:'文件'

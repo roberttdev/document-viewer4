@@ -18,31 +18,31 @@ DV._.extend(DV.Schema.events, {
     this.handleHashChangeViewDocumentPage(page);
   },
 
-  // #document/p[pageID]/a[annotationID]
-  handleHashChangeViewDocumentAnnotation: function(page,annotation){
+  // #document/p[pageID]/a[highlightID]
+  handleHashChangeViewDocumentHighlight: function(page,highlight){
     var pageIndex   = parseInt(page,10) - 1;
-    var annotation  = parseInt(annotation,10);
+    var highlight  = parseInt(highlight,10);
 
     if(this.viewer.state === 'ViewDocument'){
-      this.viewer.pageSet.showAnnotation(this.viewer.schema.data.annotationsById[annotation]);
+      this.viewer.pageSet.showHighlight(this.viewer.schema.data.highlightsById[highlight]);
     }else{
       this.models.document.setPageIndex(pageIndex);
-      this.viewer.pageSet.setActiveAnnotation(annotation);
-      this.viewer.openingAnnotationFromHash = true;
+      this.viewer.pageSet.setActiveHighlight(highlight);
+      this.viewer.openingHighlightFromHash = true;
       this.viewer.open('ViewDocument');
     }
   },
 
-  // #annotation/a[annotationID]
-  handleHashChangeViewAnnotationAnnotation: function(annotation){
-    var annotation  = parseInt(annotation,10);
+  // #highlight/a[highlightID]
+  handleHashChangeViewHighlightHighlight: function(highlight){
+    var highlight  = parseInt(highlight,10);
     var viewer = this.viewer;
 
-    if(viewer.state === 'ViewAnnotation'){
-      viewer.pageSet.showAnnotation(this.viewer.schema.data.annotationsById[annotation]);
+    if(viewer.state === 'ViewHighlight'){
+      viewer.pageSet.showHighlight(this.viewer.schema.data.highlightsById[highlight]);
     }else{
-      viewer.activeAnnotationId = annotation;
-      this.viewer.open('ViewAnnotation');
+      viewer.activeHighlightId = highlight;
+      this.viewer.open('ViewHighlight');
     }
   },
 

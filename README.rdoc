@@ -37,12 +37,12 @@ https://www.documentcloud.org/documents/19864-goldman-sachs-internal-emails.json
     id          : DOCUMENT_ID,
     pages       : TOTAL_PAGES,
     
-    annotations : 
+    highlights :
     [
       {
-        title     : ANNOTATION_TITLE,
+        title     : HIGHLIGHT_TITLE,
         page      : PAGE_INDEX,
-        content   : ANNOTATION_DESCRIPTION
+        content   : HIGHLIGHT_DESCRIPTION
         location  : { image: "x1, y1, x2, y2" },
       } 
     ],

@@ -1,4 +1,4 @@
-.DV-viewDocument .DV-allAnnotations,
+.DV-viewDocument .DV-allHighlights,
 .DV-viewDocument .DV-text,
 .DV-viewDocument .DV-search,
 .DV-viewDocument .DV-thumbnails,
@@ -20,18 +20,18 @@
   background:none;
 }
 
-.DV-viewDocument .DV-annotation {
+.DV-viewDocument .DV-highlight {
   height: 0;
 }
 .DV-viewDocument .DV-pageNote {
   height: auto;
 }
-.DV-viewDocument .DV-activeAnnotation {
+.DV-viewDocument .DV-activeHighlight {
   height: auto;
 }
 
-.DV-viewDocument .DV-currentAnnotationPrefix,
-.DV-viewDocument .DV-totalAnnotations{
+.DV-viewDocument .DV-currentHighlightPrefix,
+.DV-viewDocument .DV-totalHighlights{
   display:none;
 }
 
@@ -44,6 +44,6 @@
   cursor:pointer !important;
 }
 
-.DV-viewDocument .DV-annotationRegionBorder {
+.DV-viewDocument .DV-highlightRegionBorder {
   display: block;
 }
