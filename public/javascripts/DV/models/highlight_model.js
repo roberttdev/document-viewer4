@@ -5,7 +5,7 @@ DV.HighlightModel = function(argHash){
 
     this.displayIndex = 0;
     this.document_id = null;
-    this.id = parseInt(DV._.uniqueId());
+    this.id = null;
     this.image_link = null;
     this.location = null;
     this.page = 0;
