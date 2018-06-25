@@ -37,7 +37,6 @@ DV.HighlightModel.prototype.set = function(argHash){
         }
 
         //Special case logic
-        if(index == 'id') this.server_id = element;
         if(index == 'location'){
             var loc = DV.jQuery.map(element.split(','), function (n, i) {
                 return parseInt(n, 10);
