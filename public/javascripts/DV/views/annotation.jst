@@ -13,7 +13,7 @@
         <div class="DV-annotationTitle DV-editHidden"><%- title %></div>
         <input class="DV-annotationTitleInput DV-editVisible" type="text" placeholder="<%= DV.t('annotation_title') %>" value="<%- title.replace(/"/g, '&quot;') %>" />
         <div class="DV-errorMsg"></div>
-        <div class="DV-showEdit DV-editHidden <%= accessClass %>"></div>
+        <div class="<%if(owns_note){%>DV-showEdit<%}%> DV-editHidden <%= accessClass %>"></div>
   </div>
 
   <div class="DV-annotationBody DV-editHidden">

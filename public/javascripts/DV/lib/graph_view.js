@@ -7,6 +7,8 @@ DV.GraphView = function(highlViewRef, graphModel){
 // Receives an argHash with external data about the highlight container/context
 DV.GraphView.prototype.render = function(argHash){
     argHash.graph_json = _.escape(JSON.stringify(this.model.get('graph_json')));
+    argHash.owns_note = this.model.get('owns_note');
+
     var returnHTML = JST['DV/views/graph'](argHash);
     return returnHTML;
 },
@@ -21,7 +23,7 @@ DV.GraphView.prototype.initWPD = function(){
     //If wpd loaded, run init -- if not, it's already loading, so wait and try again
     if(typeof(wpd) != 'undefined'){
         wpd.iframe_api.setParentMsgFunction(this.highlight.viewer.wpd_api.receiveMessage.bind(this.highlight.viewer.wpd_api));
-        wpd.initApp(true, this.highlight.model.get('image_link'), this.model.get('graph_json'), $(this.highlight.highlightEl).find('#graph_frame'));
+        wpd.initApp(true, this.highlight.model.get('image_link'), this.model.get('graph_json'), $(this.highlight.highlightEl).find('#graph_frame'), !this.model.get('owns_note'));
     }else{
         //If not loaded, try again in 1 second
         setTimeout(this.initWPD.bind(this), 1000);

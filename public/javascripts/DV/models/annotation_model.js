@@ -1,10 +1,11 @@
 DV.AnnotationModel = function(argHash){
     //Set defaults
     this.access = 'public';
-    this.author = null;
-    this.author_organizaton = null;
+    this.account_id = null;
     this.group_id = null;
     this.id = null;
+    this.match_id = null;
+    this.owns_note = true;
     this.server_id = null;
     this.text = '';
     this.title = '';
@@ -24,7 +25,7 @@ DV.AnnotationModel.prototype.get = function(property){
 DV.AnnotationModel.prototype.set = function(argHash){
     DV._.each(argHash, DV.jQuery.proxy(function(element, index){
         //Whitelist parameters
-        if(['access','author','author_organization','group_id','id','server_id','text','title','unsaved'].indexOf(index) >= 0){
+        if(['access','account_id','group_id','id','match_id','owns_note','server_id','text','title','unsaved'].indexOf(index) >= 0){
             this[index] = element;
         }
 
@@ -40,9 +41,11 @@ DV.AnnotationModel.prototype.set = function(argHash){
 DV.AnnotationModel.prototype.assembleContentForDC = function(){
     return {
         access: this.access,
+        account_id: this.account_id,
         content: this.text,
         group_id: this.group_id,
         id: this.id,
+        match_id: this.match_id,
         title: this.title,
         server_id: this.server_id,
         unsaved: this.unsaved

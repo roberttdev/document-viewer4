@@ -14,6 +14,7 @@ DV.AnnotationView.prototype.render = function(argHash){
     argHash.author_organization = this.model.get('author_organization') || "";
     argHash.image               = pageModel.imageURL(this.highlight.page.pageNumber - 1);
     argHash.imageTop            = argHash.top + 6;
+    argHash.owns_note           = this.model.get('owns_note');
     argHash.title               = this.model.get('title');
     argHash.text                = this.model.get('text');
 
