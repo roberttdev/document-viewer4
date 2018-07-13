@@ -188,9 +188,9 @@ DV.Api.prototype = {
   },
 
   // Find highlight and make it the active one
-  selectHighlight: function(highlightInfo, showEdit) {
+  selectHighlight: function(highlightInfo, showEdit, callbacks) {
       this.viewer.schema.setActiveContent(highlightInfo);
-      this.viewer.pageSet.showHighlight(highlightInfo, {active: true, edit : showEdit, callbacks: false});
+      this.viewer.pageSet.showHighlight(highlightInfo, {active: true, edit : showEdit, callbacks: callbacks});
   },
 
   // Remove highlight/group relationship (and highlight if no relationships left)
@@ -329,9 +329,9 @@ DV.Api.prototype = {
 
 
   //Activate/deactivate 'approved' view for anno (temporary, data does not update)
-  markApproval: function(anno_id, group_id, approval) {
-      var anno = this.viewer.schema.markApproval(anno_id, group_id, approval);
-      this.viewer.pageSet.refreshHighlight(anno, group_id, false);
+  markApproval: function(highl_id, content_id, content_type, approval) {
+      var anno = this.viewer.schema.markApproval(highl_id, content_id, content_type, approval);
+      this.viewer.pageSet.refreshHighlight(anno, false);
   },
 
   // ---------------------- Enter/Leave Edit Modes -----------------------------

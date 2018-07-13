@@ -69,18 +69,16 @@ DV.Schema.prototype.setActiveContent = function(highlightInfo) {
 
 
 //Update an highlight-group's approval status and return it
-DV.Schema.prototype.markApproval = function(anno_id, group_id, approval){
-    var matchedAnno = this.getHighlight(anno_id);
+DV.Schema.prototype.markApproval = function(highl_id, content_id, content_type, approval){
+    var matchedHighl = this.getHighlight(highl_id);
 
-    //Update anno approved count
-    for(var i=0; i < matchedAnno.groups.length; i++){
-        if( matchedAnno.groups[i].group_id == group_id ){
-            if(approval){ matchedAnno.groups[i].approved_count++; }
-            else{ matchedAnno.groups[i].approved_count--; }
-        }
+    //Update content approval
+    var content = ( content_type == 'annotation' ) ? matchedHighl.annotations : matchedHighl.graphs;
+    for(var i=0; i < content.length; i++){
+        if( content[i].get('id') == content_id ){ content[i].set({'approved': approval}) ; }
     }
 
-    return matchedAnno;
+    return matchedHighl;
 };
 
 
@@ -122,23 +120,27 @@ DV.Schema.prototype.removeHighlightContent = function(highl, highlightInfo){
     }else if( "graph_id" in highlightInfo ){
         highl.removeGraph(highlightInfo.graph_id);
     }
-    return ( (!highl.annotations || highl.annotations.length < 1) && (!highl.graphs || highl.graphs.length < 1) ) ? true : false;
+
+    var noContent = (!highl.annotations || highl.annotations.length < 1) && (!highl.graphs || highl.graphs.length < 1);
+    if(noContent) this.removeHighlight(highl);
+
+    return noContent;
 };
 
 //Remove graph highlight
-DV.Schema.prototype.removeHighlight = function(anno){
-    var i = anno.page - 1;
-    this.data.highlightsByPage[i] = DV._.without(this.data.highlightsByPage[i], anno);
-    delete this.data.highlightsById[anno.id];
+DV.Schema.prototype.removeHighlight = function(highl){
+    var i = highl.page - 1;
+    this.data.highlightsByPage[i] = DV._.without(this.data.highlightsByPage[i], highl);
+    delete this.data.highlightsById[highl.id];
     return true;
 };
 
 
 //Reload highlight schema
-DV.Schema.prototype.reloadHighlights = function(annos) {
+DV.Schema.prototype.reloadHighlights = function(highls) {
     this.data.highlightsById = {};
     this.data.highlightsByPage = {};
-    DV._.each(annos, DV.jQuery.proxy(this.loadHighlight, this));
+    DV._.each(highls, DV.jQuery.proxy(this.loadHighlight, this));
 };
 
 

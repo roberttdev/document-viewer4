@@ -158,13 +158,16 @@ DV.PageSet.prototype.draw = function(pageCollection){
 };
 
 DV.PageSet.prototype.redraw = function(stopResetOfPosition, redrawHighlights) {
-    if (this.pages['p0']) this.pages['p0'].draw({ force: true, forceHighlightRedraw : redrawHighlights });
-    if (this.pages['p1']) this.pages['p1'].draw({ force: true, forceHighlightRedraw : redrawHighlights });
-    if (this.pages['p2']) this.pages['p2'].draw({ force: true, forceHighlightRedraw : redrawHighlights });
+    var _this = this;
+    this.cleanUp(function(){
+        if (_this.pages['p0']) _this.pages['p0'].draw({ force: true, forceHighlightRedraw : redrawHighlights });
+        if (_this.pages['p1']) _this.pages['p1'].draw({ force: true, forceHighlightRedraw : redrawHighlights });
+        if (_this.pages['p2']) _this.pages['p2'].draw({ force: true, forceHighlightRedraw : redrawHighlights });
 
-    if(redrawHighlights && this.viewer.activeHighlight){
-        this.viewer.helpers.jump(this.viewer.activeHighlight.page.index,this.viewer.activeHighlight.position.top - 37);
-    }
+        if(redrawHighlights && this.viewer.activeHighlight){
+            _this.viewer.helpers.jump(_this.viewer.activeHighlight.page.index,_this.viewer.activeHighlight.position.top - 37);
+        }
+    });
 };
 
 //Add highlight to its page. Takes in standard (schema) hash
@@ -222,8 +225,8 @@ DV.PageSet.prototype.showHighlight = function(argHash, showHash){
             if (this.pages['p' + i]) {
                 for(var n = 0; n < this.pages['p'+i].highlights.length; n++){
                     if(this.pages['p'+i].highlights[n].model.id === argHash.highlight_id){
-                        this.viewer.helpers.jump(argHash.index, offset);
-                        this.pages['p'+i].highlights[n].refresh(showHash.active, showHash.edit);
+                        this.viewer.helpers.jump(this.pages['p'+i].highlights[n].model.page - 1, offset);
+                        this.pages['p'+i].highlights[n].refresh(showHash.active, showHash.edit, showHash.callbacks);
                         return;
                     }
                 }

@@ -2,6 +2,7 @@ DV.AnnotationModel = function(argHash){
     //Set defaults
     this.access = 'public';
     this.account_id = null;
+    this.approved = false;
     this.group_id = null;
     this.id = null;
     this.match_id = null;
@@ -25,7 +26,7 @@ DV.AnnotationModel.prototype.get = function(property){
 DV.AnnotationModel.prototype.set = function(argHash){
     DV._.each(argHash, DV.jQuery.proxy(function(element, index){
         //Whitelist parameters
-        if(['access','account_id','group_id','id','match_id','owns_note','server_id','text','title','unsaved'].indexOf(index) >= 0){
+        if(['access','account_id','approved','group_id','id','match_id','owns_note','server_id','text','title','unsaved'].indexOf(index) >= 0){
             this[index] = element;
         }
 

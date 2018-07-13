@@ -25,7 +25,7 @@ DV.HighlightView = function(highl, page, active, edit){
         this.viewer.helpers.setActiveHighlightLimits(this);
         this.viewer.events.resetTracker();
         this.active = null;
-        this.show();
+        this.show({active: true, edit: edit});
         if (edit) this.showEdit();
     }
 };
@@ -120,11 +120,11 @@ DV.HighlightView.prototype.remove = function(){
 
 // Redraw the HTML for this highlight
 //active: Whether to make the refreshed highlight active (optional)
-DV.HighlightView.prototype.refresh = function(active, edit) {
+DV.HighlightView.prototype.refresh = function(active, edit, callbacks) {
     this.renderedHTML = DV.jQuery(this.render());
     this.remove();
     this.add();
-    if(active != false){ this.show({callbacks: false, edit: edit}); }else{ this.hide(true); }
+    if(active != false){ this.show({callbacks: callbacks ? callbacks : false, edit: edit}); }else{ this.hide(true); }
 };
 
 
@@ -183,6 +183,9 @@ DV.HighlightView.prototype.show = function(argHash) {
 
     //Scroll into view (horizontally)
     $('.DV-pages').scrollLeft(this.showWindowX);
+
+    //Fire callbacks if requested
+    if(argHash && argHash.callbacks){ this.viewer.fireSelectCallbacks(this.model.assembleContentForDC()); }
 };
 
 

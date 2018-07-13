@@ -133,8 +133,8 @@ DV.HighlightModel.prototype.getApprovalState = function(){
     var approval_state = 0;
     var all_approved = true;
 
-    DV._.each(this.annotations, function(anno){ (anno.qc_approved_by != null)? approval_state = 1 : all_approved = false; });
-    DV._.each(this.graphs, function(graph){ (graph.qc_approved_by != null)? approval_state = 1 : all_approved = false; });
+    DV._.each(this.annotations, function(anno){ (anno.approved)? approval_state = 1 : all_approved = false; });
+    DV._.each(this.graphs, function(graph){ (graph.approved)? approval_state = 1 : all_approved = false; });
 
     return (all_approved) ? 2: approval_state;
 };

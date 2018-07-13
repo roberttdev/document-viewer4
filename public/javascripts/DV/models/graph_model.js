@@ -1,6 +1,8 @@
 DV.GraphModel = function(argHash){
     //Set defaults
     this.access = 'public';
+    this.account_id = null;
+    this.approved = false;
     this.graph_json = null;
     this.group_id = null;
     this.id = null;
@@ -22,7 +24,7 @@ DV.GraphModel.prototype.get = function(property){
 DV.GraphModel.prototype.set = function(argHash){
     DV._.each(argHash, DV.jQuery.proxy(function(element, index){
         //Whitelist parameters
-        if(['access','graph_json','group_id','id','owns_note','server_id','unsaved'].indexOf(index) >= 0){
+        if(['access','account_id','approved','graph_json','group_id','id','owns_note','server_id','unsaved'].indexOf(index) >= 0){
             this[index] = element;
         }
 
@@ -37,6 +39,7 @@ DV.GraphModel.prototype.set = function(argHash){
 DV.GraphModel.prototype.assembleContentForDC = function(){
     return {
         access: this.access,
+        account_id: this.account_id,
         graph_json: this.graph_json,
         group_id: this.group_id,
         id: this.id,
