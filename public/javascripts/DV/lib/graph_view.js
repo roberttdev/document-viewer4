@@ -8,6 +8,7 @@ DV.GraphView = function(highlViewRef, graphModel){
 DV.GraphView.prototype.render = function(argHash){
     argHash.graph_json = _.escape(JSON.stringify(this.model.get('graph_json')));
     argHash.owns_note = this.model.get('owns_note');
+    argHash.show_icon = (this.model.get('based_on')) ? 'qc' : 'de';
 
     var returnHTML = JST['DV/views/graph'](argHash);
     return returnHTML;
@@ -23,7 +24,7 @@ DV.GraphView.prototype.initWPD = function(){
     //If wpd loaded, run init -- if not, it's already loading, so wait and try again
     if(typeof(wpd) != 'undefined'){
         wpd.iframe_api.setParentMsgFunction(this.highlight.viewer.wpd_api.receiveMessage.bind(this.highlight.viewer.wpd_api));
-        wpd.initApp(true, this.highlight.model.get('image_link'), this.model.get('graph_json'), $(this.highlight.highlightEl).find('#graph_frame'), !this.model.get('owns_note'));
+        wpd.initApp(true, this.highlight.model.get('image_link'), this.model.get('graph_json'), $(this.highlight.highlightEl).find('#graph_frame'), this.showReadOnly());
     }else{
         //If not loaded, try again in 1 second
         setTimeout(this.initWPD.bind(this), 1000);
@@ -53,16 +54,27 @@ DV.GraphView.prototype.showGraphEditor = function(){
             var script = document.createElement('script');
             script.src = '/viewer/WPD/combined-compiled.js';
             script.onload = function(){
-                $(frame).html(JST['WPD/wpd']);
-                _thisView.initWPD();
+                _thisView.setWPDDOM();
             }
             document.body.appendChild(script);
             DV.WPD_loaded = true;
         }else {
-            $(frame).html(JST['WPD/wpd']);
-            _thisView.initWPD();
+           _thisView.setWPDDOM();
         }
     });
+};
+
+
+DV.GraphView.prototype.setWPDDOM = function(){
+    var frame = this.highlight.highlightEl.find('#graph_frame')[0];
+    $(frame).html(JST['WPD/wpd']);
+
+    //Sometimes this doesn't work because page jump hasn't rendered yet (render process is on a timer).  If so, wait for render and retry
+    if( $(frame).html() == "" ){
+        setTimeout(this.setWPDDOM.bind(this), 1000);
+    }else {
+        this.initWPD();
+    }
 };
 
 
@@ -108,3 +120,10 @@ DV.GraphView.prototype.hasChanged = function() {
     var compareJSON = this.model.get('graph_json') == null ? "" : JSON.stringify(this.model.get('graph_json'));
     return this.highlight.highlightEl.hasClass('DV-editing') && (_.unescape(this.highlight.highlightEl.find('.DV-graphData').val()) != compareJSON);
 };
+
+
+//Return whether graph should show read-only
+DV.GraphView.prototype.showReadOnly = function() {
+    var docStatus = this.highlight.viewer.schema.document.status;
+    return !(([2,3,10].indexOf(docStatus) > -1) && this.model.get('owns_note'));
+}

@@ -61,9 +61,9 @@ DV.Schema.prototype.loadHighlight = function(highl) {
 DV.Schema.prototype.setActiveContent = function(highlightInfo) {
     var highl = this.findHighlight({id: highlightInfo.highlight_id});
     if( "anno_id" in highlightInfo ){
-        highl.displayIndex = highl.annotations.findIndex(function(anno){ return anno.server_id == highlightInfo.anno_id; });
+        highl.set({'displayIndex': highl.annotations.findIndex(function(anno){ return anno.server_id == highlightInfo.anno_id; })});
       }else if( "graph_id" in highlightInfo ){
-        highl.displayIndex = highl.graphs.findIndex(function(graph){ return graph.server_id == highlightInfo.graph_id; }) + highl.annotations.length;
+        highl.set({'displayIndex': highl.graphs.findIndex(function(graph){ return graph.server_id == highlightInfo.graph_id; }) + highl.annotations.length});
     }
 };
 
@@ -87,28 +87,22 @@ DV.Schema.prototype.addHighlightContent = function(highl, new_content){
     if( new_content.type == 'annotation' ){
         var annoHash = {};
         if(new_content.id){
-            annoHash.id         = new_content.id;
-            annoHash.server_id  = new_content.id;
-            annoHash.unsaved    = (new_content.text && new_content.text != '' && new_content.title && new_content.title != '') ? false : true;
+            new_content.owns_note = true;
+            new_content.server_id  = new_content.id;
+            new_content.unsaved    = (new_content.text && new_content.text != '' && new_content.title && new_content.title != '') ? false : true;
         }
-        if(new_content.group_id) annoHash.group_id = new_content.group_id;
-        if(new_content.title) annoHash.title = new_content.title;
-        if(new_content.text) annoHash.text = new_content.text;
 
-        highl.addAnnotation(annoHash);
+        highl.addAnnotation(new_content);
         highl.set({displayIndex: highl.annotations.length - 1});
     }else if( new_content.type == 'graph' ) {
         var graphHash = {};
         if(new_content.id){
-            graphHash.id         = new_content.id;
-            graphHash.server_id  = new_content.id;
-            graphHash.unsaved    = (new_content.graph_json && new_content.graph_json != '') ? false : true;
+            new_content.owns_note = true;
+            new_content.server_id  = new_content.id;
+            new_content.unsaved    = (new_content.graph_json && new_content.graph_json != '') ? false : true;
         }
-        if(new_content.graph_json) annoHash.graph_json = new_content.graph_json;
-        if(new_content.group_id) graphHash.group_id = new_content.group_id;
-        if(new_content.image_link) annoHash.image_link = new_content.image_link;
 
-        highl.addGraph(graphHash);
+        highl.addGraph(new_content);
         highl.set({displayIndex: highl.annotations.length + highl.graphs.length - 1});
     }
 }
@@ -182,6 +176,9 @@ DV.Schema.prototype.syncHighlight = function(highlightInfo) {
         highl = highl[0];
     }
 
+    //Since it's being set from a DB pull, it's always saved
+    highlightInfo.content.unsaved = false;
+
     //If the content passed is an annotation..
     if( contentType == 'annotation' ){
         //Match anno.  If no luck, find anno with no ID and set that one
@@ -196,18 +193,14 @@ DV.Schema.prototype.syncHighlight = function(highlightInfo) {
             annos = _.filter(highl.annotations, function(listAnno){ return listAnno.title == anno.title && listAnno.text == anno.text; });
             DV._.each(annos, function(listAnno){
                 listAnno.set({
+                    approved:   content.approved,
                     text:       content.content,
                     title:      content.title,
                     unsaved:    false
                 });
             });
         }else{
-            anno.set({
-                group_id:   content.group_id,
-                text:       content.content,
-                title:      content.title,
-                unsaved:    false
-            });
+            anno.set(highlightInfo.content);
         }
     }
 
@@ -219,11 +212,7 @@ DV.Schema.prototype.syncHighlight = function(highlightInfo) {
             graph = highl.findGraph(null);
             graph.set({id: content.id, server_id: content.id});
         }
-        graph.set({
-            graph_json: content.graph_json,
-            group_id:   content.group_id,
-            unsaved:    false
-        })
+        graph.set(highlightInfo.content);
     }
 };
 
@@ -341,4 +330,5 @@ DV.Schema.prototype.getUniqueID = function(){
     }
 
     return id;
-}
+};
+

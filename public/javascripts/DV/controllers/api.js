@@ -184,7 +184,11 @@ DV.Api.prototype = {
   addContentToHighlight: function(highlightId, new_content, showEdit){
       highl = this.viewer.schema.findHighlight({id: highlightId });
       this.viewer.schema.addHighlightContent(highl, new_content);
-      this.viewer.pageSet.refreshHighlight(highl, true, showEdit);
+
+      contentHash = {highlight_id: highl.id};
+      if(new_content.type == 'annotation'){ contentHash.anno_id = new_content.id; }
+      if(new_content.type == 'graph'){ contentHash.graph_id = new_content.id; }
+      this.selectHighlight(contentHash, showEdit, false);
   },
 
   // Find highlight and make it the active one
@@ -213,8 +217,8 @@ DV.Api.prototype = {
   syncHighlights: function(highlightInfo) {
       var _this = this;
       _this.viewer.schema.syncHighlight(highlightInfo);
-      this.viewer.activeHighlight.highlightEl.removeClass('DV-editing');
-      this.viewer.pageSet.refreshHighlight(this.viewer.activeHighlight.model, true, false);
+      if(this.viewer.activeHighlight){ this.viewer.activeHighlight.highlightEl.removeClass('DV-editing'); }
+      this.viewer.pageSet.refreshHighlight(this.viewer.schema.findHighlight({id: highlightInfo.content.highlight_id}), true, false);
   },
 
   //Request current highlight to display/hide clone confirm buttons

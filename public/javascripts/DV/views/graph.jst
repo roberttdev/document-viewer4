@@ -4,13 +4,19 @@
   </div>
   <div class="DV-annotationMeta <%= accessClass %>">
     <div class="DV-annotationEditControls DV-editVisible">
-      <%if(owns_note){%>
       <div class="DV-clearfix">
+      <%if(show_icon == 'de'){%>
+        <div class="DV-de_icon"></div>
+      <%}else if(show_icon == 'qc'){%>
+        <div class="DV-qc_icon"></div>
+      <%}%>
+      <%if(owns_note){%>
+
         <div class="DV-errorMsg float_left"></div>
         <div class="minibutton default DV-saveAnnotation float_right"><%= DV.t('save') %></div>
         <div class="minibutton DV-cancelEdit float_right"><%= DV.t('cancel') %></div>
         <div class="float_right DV-data_error"></div>
-      </div>
       <%}%>
+      </div>
     </div>
   </div>

@@ -124,7 +124,7 @@ DV.HighlightView.prototype.refresh = function(active, edit, callbacks) {
     this.renderedHTML = DV.jQuery(this.render());
     this.remove();
     this.add();
-    if(active != false){ this.show({callbacks: callbacks ? callbacks : false, edit: edit}); }else{ this.hide(true); }
+    if(active != false){ this.show({active: active, callbacks: callbacks ? callbacks : false, edit: edit}); }else{ this.hide(true); }
 };
 
 
